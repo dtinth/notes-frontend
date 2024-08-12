@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite + TS</title>
+  </head>
+  <body class="bg-#252423 text-#e9e8e7 antialiased">
+    <header class="h-[58px] bg-#090807 border-b border-#454443 z-20 flex">
+      <div class="flex items-center px-[18px] flex-none">
+        <a class="flex items-center text-#8b8685 text-lg" href="/"
+          >notes.dt.in.th</a
+        >
+      </div>
+      <div class="flex items-center ml-auto px-[18px]"></div>
+    </header>
+    <main class="bg-#353433" id="main">
+      <div class="max-w-4xl mx-auto p-6 py-12" id="mainContents">
+        <content-placeholder>Loading…</content-placeholder>
+      </div>
+    </main>
+    <footer>
+      <div
+        class="max-w-4xl mx-auto p-4 text-#8b8685 text-right text-sm"
+        id="footerContents"
+      ></div>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
