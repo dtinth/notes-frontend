@@ -11,6 +11,7 @@ import { rehype } from "rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import rehypeVueSFC from "rehype-vue-sfc";
+import rehypeShiki from "@shikijs/rehype";
 
 export async function markdownToVue(
   text: string
@@ -31,12 +32,14 @@ export async function markdownToVue(
       directiveHtml({}),
     ],
   });
-  console.log(result);
 
   const processor = rehype()
     .data("settings", { fragment: true })
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings)
+    .use(rehypeShiki, {
+      theme: "vitesse-dark",
+    })
     .use(rehypeVueSFC);
   const processed = await processor.process(result);
 

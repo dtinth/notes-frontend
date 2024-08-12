@@ -8,7 +8,13 @@ export function executeCjs(cjs: string, moduleMap: Record<string, any>) {
   };
   const exports = {};
   const module = { exports };
-  const fn = new Function("require", "exports", "module", cjs);
-  fn(require, exports, module);
+  const fn = new Function("require", "exports", "module", "Vue", cjs);
+  fn(require, exports, module, Vue);
   return module.exports as { default: Vue.Component };
+}
+
+export function hydrate(js: string, target: string) {
+  const Component = executeCjs(js, {}).default;
+  const app = Vue.createSSRApp(Component);
+  app.mount(target);
 }

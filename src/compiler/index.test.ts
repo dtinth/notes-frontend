@@ -10,6 +10,10 @@ x:
 
 this is some text
 
+\`\`\`js
+const x = "hello"
+\`\`\`
+
 [link {{x}}](link)
 
 <script setup>
@@ -21,7 +25,7 @@ const x = ref(1);
 
 ## section 1
 
-nice
+<span class="bg-red-400">nice</span>
 
 ## section 2
 
@@ -41,4 +45,14 @@ test("supports scoped styles", async () => {
 test("supports frontmatter", async () => {
   const result = await compileMarkdown(FIXTURE1);
   expect(result.frontMatter.x.y.z).toEqual(99);
+});
+
+test("renders syntax highlighting", async () => {
+  const result = await compileMarkdown(FIXTURE1);
+  expect(result.html).toContain("shiki");
+});
+
+test("supports tailwind css classes", async () => {
+  const result = await compileMarkdown(FIXTURE1);
+  expect(result.css).toContain(".bg-red-400");
 });

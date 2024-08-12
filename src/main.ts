@@ -14,20 +14,26 @@ document.querySelector("#mainContents")!.innerHTML = `
 </div>
 `;
 
+async function runCompiled(compiled: {
+  css: string;
+  html: string;
+  js: string;
+}) {
+  document.querySelector("#mainContents")!.innerHTML = `
+    <style>${compiled.css}</style>
+    <div class="${prose}" id="noteContents">${compiled.html}</div>
+  `;
+  const { hydrate } = await import("./runtime/vue3");
+  hydrate(compiled.js, "#noteContents");
+}
+
 fetch("/test.json")
   .then((r) => r.json())
   .then(async (v) => {
-    document.querySelector("#mainContents")!.innerHTML = `
-      <style>${v.css}</style>
-      <div class="${prose}" id="noteContents">${v.html}</div>
-    `;
-
-    const Vue = await import("vue");
-    // import { executeCjs } from "./runtime/vue3";
-    const { executeCjs } = await import("./runtime/vue3");
-    const Component = executeCjs(v.js, {}).default;
-    console.log(Component);
-    // Hydrate
-    const app = Vue.createSSRApp(Component);
-    app.mount("#noteContents");
+    runCompiled(v);
   });
+
+import("./compiler").then(async ({ compileMarkdown }) => {
+  Object.assign(window, { compileMarkdown });
+  console.log(await compileMarkdown("whee"));
+});

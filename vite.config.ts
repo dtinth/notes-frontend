@@ -1,11 +1,21 @@
 import { defineConfig } from "vitest/config";
+import inject from "@rollup/plugin-inject";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = process.cwd();
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  plugins: [
+    inject({
+      Buffer: ["buffer-es6", "Buffer"],
+      global: [__dirname + "/src/shims/global.ts", "global"],
+    }),
+  ],
   build: {
     rollupOptions: {
+      external: ["@swc/core"],
       output: {
         entryFileNames: `runtime/[name].js`,
         assetFileNames: (assetInfo) => {
@@ -22,7 +32,7 @@ export default defineConfig({
     alias: {},
   },
   optimizeDeps: {
-    exclude: ["vitepress/dist/node/index.js"],
+    exclude: ["@swc/core", __dirname + "/src/shims/global.ts"],
   },
   test: {
     server: {
