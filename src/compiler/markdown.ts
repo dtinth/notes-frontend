@@ -1,3 +1,4 @@
+import rehypeShiki from "@shikijs/rehype";
 import matter from "gray-matter";
 import { micromark } from "micromark";
 import { directive, directiveHtml } from "micromark-extension-directive";
@@ -11,12 +12,15 @@ import { rehype } from "rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import rehypeVueSFC from "rehype-vue-sfc";
-import rehypeShiki from "@shikijs/rehype";
 
 export async function markdownToVue(
-  text: string
+  text: string,
+  log: (message: string) => void = () => {}
 ): Promise<MarkdownToVueResult> {
+  log("markdownToVue started");
   const { content: markdown, data: frontMatter } = matter(text);
+  log("matter extracted");
+
   const result = micromark(markdown, {
     allowDangerousHtml: true,
     extensions: [
@@ -32,6 +36,7 @@ export async function markdownToVue(
       directiveHtml({}),
     ],
   });
+  log("micromark processed");
 
   const processor = rehype()
     .data("settings", { fragment: true })
@@ -42,6 +47,7 @@ export async function markdownToVue(
     })
     .use(rehypeVueSFC);
   const processed = await processor.process(result);
+  log("rehype processed");
 
   return {
     vueTemplate: processed.toString(),

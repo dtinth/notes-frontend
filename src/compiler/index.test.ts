@@ -33,26 +33,26 @@ very nice
 `;
 
 test("pre-renders the Vue component", async () => {
-  const result = await compileMarkdown(FIXTURE1);
-  expect(result.html).toContain("link 1");
+  const { compiled } = await compileMarkdown(FIXTURE1);
+  expect(compiled.html).toContain("link 1");
 });
 
 test("supports scoped styles", async () => {
-  const result = await compileMarkdown(FIXTURE1);
-  expect(result.css).toContain("a[data-v");
+  const { compiled } = await compileMarkdown(FIXTURE1);
+  expect(compiled.css).toContain("a[data-v");
 });
 
 test("supports frontmatter", async () => {
-  const result = await compileMarkdown(FIXTURE1);
-  expect(result.frontMatter.x.y.z).toEqual(99);
+  const { frontMatter } = await compileMarkdown(FIXTURE1);
+  expect(frontMatter.x.y.z).toEqual(99);
 });
 
 test("renders syntax highlighting", async () => {
-  const result = await compileMarkdown(FIXTURE1);
-  expect(result.html).toContain("shiki");
+  const { compiled } = await compileMarkdown(FIXTURE1);
+  expect(compiled.html).toContain("shiki");
 });
 
 test("supports tailwind css classes", async () => {
-  const result = await compileMarkdown(FIXTURE1);
-  expect(result.css).toContain(".bg-red-400");
+  const { compiled } = await compileMarkdown(FIXTURE1);
+  expect(compiled.css).toContain(".bg-red-400");
 });
