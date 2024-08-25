@@ -132,28 +132,12 @@ async function esmToCjs(
   log: (message: string) => void = () => {}
 ) {
   log("esmToCjs started");
-  const { default: initSwc, transformSync } =
-    typeof window !== "undefined"
-      ? await import("@swc/wasm-web")
-      : await import("@swc/core");
+  const sucrase = await import("sucrase");
 
-  log("swc imported");
-  if (typeof initSwc === "function" && typeof window !== "undefined") {
-    await initSwc(
-      "https://cdn.jsdelivr.net/npm/@swc/wasm-web@1.7.10/wasm_bg.wasm"
-    );
-    log("swc initialized");
-  }
-
-  const result = transformSync(esm, {
-    jsc: {
-      target: "es2022",
-    },
-    module: {
-      type: "commonjs",
-    },
+  log("sucrase imported");
+  const result = sucrase.transform(esm, {
+    transforms: ["imports"],
   });
-  log("swc processed");
-
+  log("transformed");
   return result.code;
 }
