@@ -75,6 +75,14 @@ export default {
               color: "#d7fc70",
               textShadow: "2px 2px #d7fc7026",
             },
+            h3: {
+              color: "#febfea",
+              textShadow: "2px 2px #00000040",
+            },
+            h4: {
+              color: "#bbeeff",
+              textShadow: "2px 2px #00000040",
+            },
           },
         },
       },
