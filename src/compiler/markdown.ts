@@ -1,4 +1,4 @@
-import rehypeShiki from "@shikijs/rehype";
+import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
 import matter from "gray-matter";
 import { micromark } from "micromark";
 import { directive, directiveHtml } from "micromark-extension-directive";
@@ -12,6 +12,7 @@ import { rehype } from "rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import rehypeVueSFC from "rehype-vue-sfc";
+import { highlighter } from "./shiki";
 
 export async function markdownToVue(
   text: string,
@@ -42,7 +43,7 @@ export async function markdownToVue(
     .data("settings", { fragment: true })
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings)
-    .use(rehypeShiki, {
+    .use(rehypeShikiFromHighlighter, highlighter, {
       theme: "vitesse-dark",
     })
     .use(rehypeVueSFC);
