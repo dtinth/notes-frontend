@@ -15,8 +15,9 @@ async function main() {
 }
 
 async function getCompiler() {
+  Object.assign(window, { global: window, process: { env: {} } });
   const { Buffer } = await import("buffer-es6");
-  Object.assign(window, { Buffer, global: window, process: { env: {} } });
+  Object.assign(window, { Buffer });
   return import(/* @vite-ignore */ location.origin + "/lib/compiler/index.js");
 }
 
