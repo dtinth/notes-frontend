@@ -3,9 +3,9 @@ import "@fontsource/arimo/500.css";
 import "@fontsource/arimo/600.css";
 import "@fontsource/arimo/700.css";
 import "comic-mono/index.css";
-import { ofetch } from "ofetch";
 import { CompiledNote } from "./compiler";
 import "./custom-elements/d-split";
+import { fetchPublicNoteContents } from "./io";
 import "./style.css";
 
 async function main() {
@@ -36,17 +36,9 @@ async function runPreviewer() {
   await runCompiled(result.compiled);
 }
 
-async function fetchNoteContents(slug: string) {
-  const data = await ofetch<{ contents: string }>(
-    "https://htrqhjrmmqrqaccchyne.supabase.co/rest/v1/rpc/get_note_contents?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0cnFoanJtbXFycWFjY2NoeW5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTkxOTk3NDIsImV4cCI6MTk3NDc3NTc0Mn0.VEdURpInV9dowpoMkHopAzpiBtNnRXDgO6hRfy1ZSHY",
-    { method: "POST", body: { note_id: slug } }
-  );
-  return data.contents;
-}
-
 async function runDynamic(slug: string) {
   showStatus("Loading notes contents...");
-  const contents = await fetchNoteContents(slug);
+  const contents = await fetchPublicNoteContents(slug);
   showStatus("Loading compiler...");
   const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
@@ -56,12 +48,19 @@ async function runDynamic(slug: string) {
 }
 
 async function runNormal() {
-  const pathname = location.pathname;
-  const match = pathname.match(/^\/([A-Za-z0-9]+)$/);
-  if (match) {
-    await runDynamic(match[1]);
+  const precompilation = window as unknown as {
+    precompiledNoteBehavior?: Function;
+  };
+  if (precompilation.precompiledNoteBehavior) {
+    return runPrecompiled(precompilation.precompiledNoteBehavior);
   } else {
-    await runDynamic("HomePage");
+    const pathname = location.pathname;
+    const match = pathname.match(/^\/([A-Za-z0-9]+)$/);
+    if (match) {
+      await runDynamic(match[1]);
+    } else {
+      await runDynamic("HomePage");
+    }
   }
 }
 
@@ -88,6 +87,11 @@ async function runCompiled(compiled: CompiledNote) {
   Object.assign(window, { compiled });
   const { hydrate } = await import("./runtime/vue3");
   hydrate(compiled.js, "#noteContents");
+}
+
+async function runPrecompiled(precompiledNoteBehavior: Function) {
+  const { hydrate } = await import("./runtime/vue3");
+  hydrate(precompiledNoteBehavior, "#noteContents");
 }
 
 main();

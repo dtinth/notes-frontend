@@ -19,7 +19,7 @@ export function executeCjs(
   return module.exports as { default: Vue.Component };
 }
 
-export function hydrate(js: string, target: string) {
+export function hydrate(js: string | Function, target: string) {
   const Component = executeCjs(js, {}).default;
   const app = Vue.createSSRApp(Component);
   app.mount(target);
