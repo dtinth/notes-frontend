@@ -22,19 +22,20 @@ export default {
         "#ffffbb": "#ffffbb",
       },
       typography: {
-        invert: {
+        DEFAULT: {
           css: {
             "--tw-prose-body": "#e9e8e7",
+            "--tw-prose-headings": "#e9e8e7",
             "--tw-prose-bullets": "#8b8685",
             "--tw-prose-counters": "#8b8685",
             "--tw-prose-hr": "#656463",
             "--tw-prose-pre-bg": "#252423",
             "--tw-prose-pre-code": "#e9d7c5",
             "--tw-prose-code": "#e9d7c5",
-          },
-        },
-        DEFAULT: {
-          css: {
+            "--tw-prose-links": "#ffffbb",
+            "--tw-prose-bold": "#fff",
+            letterSpacing: ".01em",
+            maxWidth: "none",
             a: {
               textDecoration: "none",
               fontWeight: "inherit",
@@ -64,6 +65,14 @@ export default {
             },
             "code::after": {
               content: "none",
+            },
+            h1: {
+              color: "#8b8685",
+              textShadow: "2px 2px #00000040",
+            },
+            h2: {
+              color: "#d7fc70",
+              textShadow: "2px 2px #d7fc7026",
             },
           },
         },

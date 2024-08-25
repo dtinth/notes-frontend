@@ -6,9 +6,6 @@ import "comic-mono/index.css";
 import { ofetch } from "ofetch";
 import "./style.css";
 
-const prose =
-  "prose prose-invert tracking-[.01em] max-w-none prose-h1:text-#8b8685 prose-h1:[text-shadow:2px_2px_#00000040] prose-h2:text-#d7fc70 prose-h2:[text-shadow:2px_2px_#d7fc7026] prose-th:uppercase prose-th:font-normal prose-th:text-xs prose-th:text-#8b8685 prose-thead:border-#656463 prose-tr:border-#454443 prose-a:text-#ffffbb";
-
 async function main() {
   if (location.pathname === "/preview") {
     return runPreviewer();
@@ -17,9 +14,15 @@ async function main() {
   }
 }
 
+async function getCompiler() {
+  const { Buffer } = await import("buffer-es6");
+  Object.assign(window, { Buffer, global: window, process: { env: {} } });
+  return import(/* @vite-ignore */ location.origin + "/lib/compiler/index.js");
+}
+
 async function runPreviewer() {
   showStatus("Loading compiler...");
-  const { compileMarkdown } = await import("./compiler-web");
+  const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
   showStatus("Compiling...");
   const result = await compileMarkdown("whee!");
@@ -39,7 +42,7 @@ async function runDynamic(slug: string) {
   showStatus("Loading notes contents...");
   const contents = await fetchNoteContents(slug);
   showStatus("Loading compiler...");
-  const { compileMarkdown } = await import("./compiler-web");
+  const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
   showStatus("Compiling...");
   const result = await compileMarkdown(contents);
@@ -58,7 +61,7 @@ async function runNormal() {
 
 function showStatus(status: string) {
   document.querySelector("#mainContents")!.innerHTML = `
-  <div class="${prose}">
+  <div class="prose">
     <h1>${status}</h1>
   </div>
   `;
@@ -71,7 +74,7 @@ async function runCompiled(compiled: {
 }) {
   document.querySelector("#mainContents")!.innerHTML = `
     <style>${compiled.css}</style>
-    <div class="${prose}" id="noteContents">${compiled.html}</div>
+    <div class="prose" id="noteContents">${compiled.html}</div>
   `;
   console.log(
     'This note has been dynamically compiled. To inspect the compiled code, open the console and type "compiled".'

@@ -6,8 +6,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  publicDir: false,
   build: {
-    outDir: path.resolve(__dirname, "lib/compiler"),
+    outDir: path.resolve(__dirname, "public/lib/compiler"),
     lib: {
       entry: path.resolve(__dirname, "src/compiler/index.ts"),
       formats: ["es"],

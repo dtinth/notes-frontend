@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port ${PORT:-20241}",
-    "build": "vite build",
+    "build": "pnpm run build:compiler && pnpm run build:web",
+    "build:web": "vite build",
     "build:compiler": "vite --config=vite.config.compiler.ts build",
     "preview": "vite preview"
   },
