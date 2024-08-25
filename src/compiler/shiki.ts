@@ -1,11 +1,12 @@
 import { createHighlighterCore } from "shiki/core";
 import getWasm from "shiki/wasm";
 
-import themesVitesseDark from "shiki/themes/vitesse-dark.mjs";
+import themesGitHubDark from "shiki/themes/github-dark.mjs";
 import { langs } from "./shikiLangs";
 
-export const highlighter = await createHighlighterCore({
-  themes: [themesVitesseDark],
-  langs: langs,
-  loadWasm: getWasm,
-});
+export const createHighligher = () =>
+  createHighlighterCore({
+    themes: [themesGitHubDark],
+    langs: langs,
+    loadWasm: getWasm,
+  });

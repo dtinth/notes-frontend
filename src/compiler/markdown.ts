@@ -12,7 +12,7 @@ import { rehype } from "rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import rehypeVueSFC from "rehype-vue-sfc";
-import { highlighter } from "./shiki";
+import { createHighligher } from "./shiki";
 
 export async function markdownToVue(
   text: string,
@@ -43,8 +43,11 @@ export async function markdownToVue(
     .data("settings", { fragment: true })
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings)
-    .use(rehypeShikiFromHighlighter, highlighter, {
-      theme: "vitesse-dark",
+    .use(rehypeShikiFromHighlighter, (await createHighligher()) as any, {
+      theme: "github-dark",
+      colorReplacements: {
+        "#24292e": "#252423",
+      },
     })
     .use(rehypeVueSFC);
   const processed = await processor.process(result);
