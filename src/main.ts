@@ -1,3 +1,4 @@
+import { ofetch } from "ofetch";
 import "./style.css";
 
 const prose =
@@ -21,8 +22,33 @@ async function runPreviewer() {
   await runCompiled(result.compiled);
 }
 
+async function fetchNoteContents(slug: string) {
+  const data = await ofetch<{ contents: string }>(
+    "https://htrqhjrmmqrqaccchyne.supabase.co/rest/v1/rpc/get_note_contents?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0cnFoanJtbXFycWFjY2NoeW5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTkxOTk3NDIsImV4cCI6MTk3NDc3NTc0Mn0.VEdURpInV9dowpoMkHopAzpiBtNnRXDgO6hRfy1ZSHY",
+    { method: "POST", body: { note_id: slug } }
+  );
+  return data.contents;
+}
+
+async function runDynamic(slug: string) {
+  showStatus("Loading notes contents...");
+  const contents = await fetchNoteContents(slug);
+  showStatus("Loading compiler...");
+  const { compileMarkdown } = await import("./compiler");
+  Object.assign(window, { compileMarkdown });
+  showStatus("Compiling...");
+  const result = await compileMarkdown(contents);
+  await runCompiled(result.compiled);
+}
+
 async function runNormal() {
-  showStatus("Unimplemented");
+  const pathname = location.pathname;
+  const match = pathname.match(/^\/([A-Za-z0-9]+)$/);
+  if (match) {
+    await runDynamic(match[1]);
+  } else {
+    await runDynamic("HomePage");
+  }
 }
 
 function showStatus(status: string) {
