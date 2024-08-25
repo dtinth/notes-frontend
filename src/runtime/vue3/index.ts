@@ -1,6 +1,9 @@
 import * as Vue from "vue";
 
-export function executeCjs(cjs: string, moduleMap: Record<string, any>) {
+export function executeCjs(
+  cjs: string | Function,
+  moduleMap: Record<string, any>
+) {
   const require = (id: string) => {
     if (id === "vue") return Vue;
     if (moduleMap[id]) return moduleMap[id];
@@ -8,7 +11,10 @@ export function executeCjs(cjs: string, moduleMap: Record<string, any>) {
   };
   const exports = {};
   const module = { exports };
-  const fn = new Function("require", "exports", "module", "Vue", cjs);
+  const fn =
+    typeof cjs === "function"
+      ? cjs
+      : new Function("require", "exports", "module", "Vue", cjs);
   fn(require, exports, module, Vue);
   return module.exports as { default: Vue.Component };
 }

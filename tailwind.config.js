@@ -28,6 +28,7 @@ export default {
             "--tw-prose-headings": "#e9e8e7",
             "--tw-prose-bullets": "#8b8685",
             "--tw-prose-counters": "#8b8685",
+            "--tw-prose-captions": "#8b8685",
             "--tw-prose-hr": "#656463",
             "--tw-prose-pre-bg": "#252423",
             "--tw-prose-pre-code": "#e9d7c5",

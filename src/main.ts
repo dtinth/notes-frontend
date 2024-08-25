@@ -4,6 +4,8 @@ import "@fontsource/arimo/600.css";
 import "@fontsource/arimo/700.css";
 import "comic-mono/index.css";
 import { ofetch } from "ofetch";
+import { CompiledNote } from "./compiler";
+import "./custom-elements/d-split";
 import "./style.css";
 
 async function main() {
@@ -16,9 +18,12 @@ async function main() {
 
 async function getCompiler() {
   Object.assign(window, { global: window, process: { env: {} } });
+  // @ts-ignore
   const { Buffer } = await import("buffer-es6");
   Object.assign(window, { Buffer });
-  return import(/* @vite-ignore */ location.origin + "/lib/compiler/index.js");
+  return import(
+    /* @vite-ignore */ location.origin + "/lib/compiler/index.js"
+  ) as Promise<typeof import("./compiler")>;
 }
 
 async function runPreviewer() {
@@ -26,7 +31,7 @@ async function runPreviewer() {
   const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
   showStatus("Compiling...");
-  const result = await compileMarkdown("whee!");
+  const result = await compileMarkdown("whee!", "Preview");
   console.log(result);
   await runCompiled(result.compiled);
 }
@@ -46,7 +51,7 @@ async function runDynamic(slug: string) {
   const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
   showStatus("Compiling...");
-  const result = await compileMarkdown(contents);
+  const result = await compileMarkdown(contents, slug);
   await runCompiled(result.compiled);
 }
 
@@ -68,15 +73,15 @@ function showStatus(status: string) {
   `;
 }
 
-async function runCompiled(compiled: {
-  css: string;
-  html: string;
-  js: string;
-}) {
+async function runCompiled(compiled: CompiledNote) {
   document.querySelector("#mainContents")!.innerHTML = `
     <style>${compiled.css}</style>
     <div class="prose" id="noteContents">${compiled.html}</div>
   `;
+  document.title = compiled.title;
+  for (const [key, value] of Object.entries(compiled.dataset)) {
+    document.documentElement.dataset[key] = value;
+  }
   console.log(
     'This note has been dynamically compiled. To inspect the compiled code, open the console and type "compiled".'
   );

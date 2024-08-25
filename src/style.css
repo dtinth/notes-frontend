@@ -5,3 +5,11 @@
 .notes-lead {
   @apply prose-lg md:prose-xl;
 }
+
+.notes-layout-container {
+  @apply max-w-4xl;
+}
+
+:root[data-layout="wide"] .notes-layout-container {
+  @apply max-w-6xl;
+}

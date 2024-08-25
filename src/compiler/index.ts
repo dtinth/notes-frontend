@@ -20,10 +20,28 @@ export interface CompileMarkdownResult {
 }
 
 export interface CompiledNote {
+  /** HTML of the rendered note */
   html: string;
+
+  /** CSS of the rendered note */
   css: string;
+
+  /** JavaScript code for the Vue component, compiled to CJS */
   js: string;
+
+  /** Page title */
+  title: string;
+
+  /** data attributes to apply to the root element */
+  dataset: Record<string, string>;
+
+  /** Elements to add to the head of the page */
+  head: HeadElement[];
 }
+
+type HeadElement =
+  | [string, Record<string, string>]
+  | [string, Record<string, string>, string];
 
 export interface DebuggingInfo {
   vueTemplate?: string;
@@ -33,13 +51,17 @@ export interface DebuggingInfo {
 }
 
 export async function compileMarkdown(
-  source: string
+  source: string,
+  slug: string
 ): Promise<CompileMarkdownResult> {
   const result: CompileMarkdownResult = {
     compiled: {
       html: "<!-- Compilation unsuccessful -->",
       css: "/* Compilation unsuccessful */",
       js: "/* Compilation unsuccessful */",
+      title: slug,
+      dataset: {},
+      head: [],
     },
     frontMatter: {},
     errors: [],
@@ -117,6 +139,14 @@ export async function compileMarkdown(
     const html = await VueServerRenderer.renderToString(app);
     result.compiled.html = html;
     log("ssr executed");
+
+    // Step 6: Add metadata
+    if (frontMatter.wide) {
+      result.compiled.dataset["layout"] = "wide";
+    }
+    if (frontMatter.title) {
+      result.compiled.title = frontMatter.title;
+    }
   } catch (e) {
     result.errors.push(errorToString(e));
   }
