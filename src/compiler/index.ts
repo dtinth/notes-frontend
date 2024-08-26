@@ -1,9 +1,11 @@
 import { createGenerator } from "@unocss/core";
 import presetUno from "@unocss/preset-uno";
 import type { File, Store } from "@vue/repl";
+import escape from "lodash-es/escape";
 import * as Vue from "vue";
 import * as compiler from "vue/compiler-sfc";
 import * as VueServerRenderer from "vue/server-renderer";
+import { processTitle, wrapHtml } from "../linker";
 import { executeCjs } from "../runtime/vue3";
 import { markdownToVue } from "./markdown";
 
@@ -170,4 +172,42 @@ async function esmToCjs(
   });
   log("transformed");
   return result.code;
+}
+
+export function applyTemplate(input: {
+  template: string;
+  compiled: {
+    dataset: Record<string, string>;
+    title: string;
+    css: string;
+    js: string;
+    html: string;
+  };
+}) {
+  const { template, compiled } = input;
+  let html = template;
+
+  let dataAttributes = " data-precompiled=true";
+  for (const [key, value] of Object.entries(compiled.dataset)) {
+    dataAttributes += ` data-${key}="${escape(value)}"`;
+  }
+
+  html = html.replace(/<html/, () => `<html` + dataAttributes);
+  html = html.replace(
+    /<script id="head-placeholder"[^]*?<\/script>/,
+    () =>
+      `<title>${escape(processTitle(compiled.title))}</title>` +
+      (!compiled.css || compiled.css === "/* No <style> tags present */"
+        ? ""
+        : `<style>${compiled.css}</style>`)
+  );
+  html = html.replace(
+    /<script id="js-placeholder"[^]*?<\/script>/,
+    () =>
+      `<script>window.precompiledNoteBehavior = function(require, exports, module, Vue) {${compiled.js}}</script>`
+  );
+  html = html.replace(
+    /<content-placeholder>([^]*?)<\/content-placeholder>/,
+    () => wrapHtml(compiled.html)
+  );
 }
