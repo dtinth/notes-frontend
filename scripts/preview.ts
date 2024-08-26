@@ -5,6 +5,7 @@ import escape from "lodash-es/escape";
 import path from "path";
 import { fileURLToPath } from "url";
 import { fetchPublicNoteContents } from "../src/io";
+import { processTitle, wrapHtml } from "../src/linker";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -43,7 +44,7 @@ server.get("/:slug", async (request, reply) => {
   html = html.replace(
     /<script id="head-placeholder"[^]*?<\/script>/,
     () =>
-      `<title>${escape(compiled.title)}</title>` +
+      `<title>${escape(processTitle(compiled.title))}</title>` +
       (!compiled.css || compiled.css === "/* No <style> tags present */"
         ? ""
         : `<style>${compiled.css}</style>`)
@@ -55,7 +56,7 @@ server.get("/:slug", async (request, reply) => {
   );
   html = html.replace(
     /<content-placeholder>([^]*?)<\/content-placeholder>/,
-    () => `<div class="prose" id="noteContents">${compiled.html}</div>`
+    () => wrapHtml(compiled.html)
   );
 
   reply.type("text/html").send(html);

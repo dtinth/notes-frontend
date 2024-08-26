@@ -5,7 +5,10 @@ import "@fontsource/arimo/700.css";
 import "comic-mono/index.css";
 import { CompiledNote } from "./compiler";
 import "./custom-elements/d-split";
+import "./custom-elements/notes-page-footer";
+import { flashMessage } from "./flash-message";
 import { fetchPublicNoteContents } from "./io";
+import { processTitle, wrapHtml } from "./linker";
 import "./style.css";
 
 async function main() {
@@ -37,14 +40,16 @@ async function runPreviewer() {
 }
 
 async function runDynamic(slug: string) {
-  showStatus("Loading notes contents...");
+  flashMessage("Loading notes contents...");
   const contents = await fetchPublicNoteContents(slug);
-  showStatus("Loading compiler...");
+  flashMessage("Loading compiler...");
   const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
-  showStatus("Compiling...");
+  flashMessage("Compiling...");
   const result = await compileMarkdown(contents, slug);
+  flashMessage("Running...");
   await runCompiled(result.compiled);
+  flashMessage("");
 }
 
 async function runNormal() {
@@ -52,7 +57,7 @@ async function runNormal() {
     precompiledNoteBehavior?: Function;
   };
   if (precompilation.precompiledNoteBehavior) {
-    return runPrecompiled(precompilation.precompiledNoteBehavior);
+    await runPrecompiled(precompilation.precompiledNoteBehavior);
   } else {
     const pathname = location.pathname;
     const match = pathname.match(/^\/([A-Za-z0-9]+)$/);
@@ -75,9 +80,9 @@ function showStatus(status: string) {
 async function runCompiled(compiled: CompiledNote) {
   document.querySelector("#mainContents")!.innerHTML = `
     <style>${compiled.css}</style>
-    <div class="prose" id="noteContents">${compiled.html}</div>
+    ${wrapHtml(compiled.html)}
   `;
-  document.title = compiled.title;
+  document.title = processTitle(compiled.title);
   for (const [key, value] of Object.entries(compiled.dataset)) {
     document.documentElement.dataset[key] = value;
   }

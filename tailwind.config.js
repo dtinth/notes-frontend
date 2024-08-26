@@ -33,6 +33,8 @@ export default {
             "--tw-prose-pre-bg": "#252423",
             "--tw-prose-pre-code": "#e9d7c5",
             "--tw-prose-code": "#e9d7c5",
+            "--tw-prose-quote-borders": "#555453",
+            "--tw-prose-quotes": "#e9d7c5",
             "--tw-prose-links": "#ffffbb",
             "--tw-prose-bold": "#fff",
             letterSpacing: ".01em",
@@ -82,6 +84,10 @@ export default {
             h4: {
               color: "#bbeeff",
               textShadow: "2px 2px #00000040",
+            },
+            blockquote: {
+              fontStyle: "inherit",
+              fontWeight: "inherit",
             },
           },
         },

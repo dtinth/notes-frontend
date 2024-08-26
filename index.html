@@ -15,18 +15,22 @@
       </div>
       <div class="flex items-center ml-auto px-[18px]"></div>
     </header>
-    <main class="bg-#353433" id="main">
-      <div class="notes-layout-container mx-auto p-6 py-12" id="mainContents">
-        <content-placeholder>Loading…</content-placeholder>
-      </div>
-    </main>
+    <div class="h-entry">
+      <main class="bg-#353433" id="main">
+        <div class="notes-layout-container mx-auto p-6 py-12" id="mainContents">
+          <content-placeholder>Loading…</content-placeholder>
+        </div>
+      </main>
+      <footer>
+        <div
+          class="notes-layout-container mx-auto py-4 px-6 text-#8b8685 text-right text-sm"
+          id="footerContents"
+        >
+          <notes-page-footer></notes-page-footer>
+        </div>
+      </footer>
+    </div>
     <script id="js-placeholder" type="text/x-placeholder"></script>
-    <footer>
-      <div
-        class="notes-layout-container mx-auto p-4 text-#8b8685 text-right text-sm"
-        id="footerContents"
-      ></div>
-    </footer>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
