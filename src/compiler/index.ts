@@ -7,8 +7,6 @@ import * as VueServerRenderer from "vue/server-renderer";
 import { executeCjs } from "../runtime/vue3";
 import { markdownToVue } from "./markdown";
 
-export * from "../linker";
-
 const uno = createGenerator({
   presets: [presetUno({ preflight: false })],
 });
