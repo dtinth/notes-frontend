@@ -5,7 +5,13 @@ import escape from "lodash-es/escape";
 import * as Vue from "vue";
 import * as compiler from "vue/compiler-sfc";
 import * as VueServerRenderer from "vue/server-renderer";
-import { processTitle, wrapHtml } from "../linker";
+import {
+  generateBreadcrumbHtml,
+  generateBreadcrumbItems,
+  processTitle,
+  Tree,
+  wrapHtml,
+} from "../linker";
 import { executeCjs, registerComponents } from "../runtime/vue3";
 import { markdownToVue } from "./markdown";
 
@@ -150,6 +156,12 @@ export async function compileMarkdown(
     if (frontMatter.title) {
       result.compiled.title = frontMatter.title;
     }
+    const ogImage = `https://screenshot.source.in.th/image/_/notes/${slug}`;
+    result.compiled.head.push(
+      ["meta", { property: "og:image", content: ogImage }],
+      ["meta", { property: "og:image:width", content: "1800" }],
+      ["meta", { property: "og:image:height", content: "1680" }]
+    );
   } catch (e) {
     result.errors.push(errorToString(e));
   }
@@ -176,17 +188,12 @@ async function esmToCjs(
 }
 
 export function applyTemplate(input: {
+  slug: string;
   template: string;
-  compiled: {
-    dataset: Record<string, string>;
-    title: string;
-    css: string;
-    js: string;
-    html: string;
-  };
-  breadcrumb?: string;
+  compiled: CompiledNote;
+  publicTree?: Tree;
 }) {
-  const { template, compiled, breadcrumb } = input;
+  const { template, compiled, publicTree, slug } = input;
   let html = template;
 
   let dataAttributes = " data-precompiled=true";
@@ -199,6 +206,7 @@ export function applyTemplate(input: {
     /<script id="head-placeholder"[^]*?<\/script>/,
     () =>
       `<title>${escape(processTitle(compiled.title))}</title>` +
+      generateHead(compiled.head) +
       (!compiled.css || compiled.css === "/* No <style> tags present */"
         ? ""
         : `<style>${compiled.css}</style>`)
@@ -208,7 +216,9 @@ export function applyTemplate(input: {
     () =>
       `<script>window.precompiledNoteBehavior = function(require, exports, module, Vue) {${compiled.js}}</script>`
   );
-  if (breadcrumb != null) {
+  if (publicTree) {
+    const items = generateBreadcrumbItems(publicTree, slug);
+    const breadcrumb = generateBreadcrumbHtml(items);
     html = html.replace(
       /<breadcrumb-placeholder>([^]*?)<\/breadcrumb-placeholder>/,
       () => breadcrumb
@@ -219,4 +229,25 @@ export function applyTemplate(input: {
     () => wrapHtml(compiled.html)
   );
   return html;
+}
+
+function generateHead(headElements: HeadElement[]): string {
+  return headElements
+    .map((element) => {
+      if (element.length === 2) {
+        const [tag, attributes] = element;
+        const attributeString = Object.entries(attributes)
+          .map(([key, value]) => `${key}="${escape(value)}"`)
+          .join(" ");
+        return `<${tag} ${attributeString} data-source="note">`;
+      } else if (element.length === 3) {
+        const [tag, attributes, content] = element;
+        const attributeString = Object.entries(attributes)
+          .map(([key, value]) => `${key}="${escape(value)}"`)
+          .join(" ");
+        return `<${tag} ${attributeString} data-source="note">${content}</${tag}>`;
+      }
+      return "";
+    })
+    .join("\n");
 }
