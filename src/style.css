@@ -72,3 +72,16 @@
 .notes-callout__label + p {
   @apply mt-0;
 }
+
+/* Share image generation mode */
+[data-screenshot-mode][data-dtinth] #main,
+[data-screenshot-mode][data-dtinth] header {
+  padding-left: 40px;
+  padding-right: 40px;
+}
+[data-screenshot-mode][data-dtinth] #main {
+  padding-top: 120px;
+  background-image: url(./images/share-overlay.svg);
+  background-repeat: no-repeat;
+  background-position: 100% -24px;
+}

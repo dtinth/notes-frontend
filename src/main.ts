@@ -9,11 +9,18 @@ import { CompiledNote } from "./compiler";
 import "./custom-elements/d-split";
 import "./custom-elements/notes-page-footer";
 import { flashMessage } from "./flash-message";
-import { fetchPublicNoteContents } from "./io";
-import { processTitle, wrapHtml } from "./linker";
+import { fetchPublicNoteContents, fetchTree } from "./io";
+import {
+  generateBreadcrumbHtml,
+  generateBreadcrumbItems,
+  processTitle,
+  wrapHtml,
+} from "./linker";
 import "./style.css";
 
-async function main() {
+function main() {
+  addHeaderToolbar();
+  checkScreenshotMode();
   if (location.pathname === "/preview") {
     return runPreviewer();
   } else {
@@ -40,6 +47,12 @@ async function addHeaderToolbar() {
   toolbar.appendChild(webring);
 }
 
+async function checkScreenshotMode() {
+  if ("#og:image" === location.hash) {
+    document.documentElement.setAttribute("data-screenshot-mode", "true");
+  }
+}
+
 async function getCompiler() {
   Object.assign(window, { global: window, process: { env: {} } });
   // @ts-ignore
@@ -60,9 +73,12 @@ async function runPreviewer() {
   await runCompiled(result.compiled);
 }
 
-async function runDynamic(slug: string) {
+async function runDynamic(searchKey: string) {
   flashMessage("Loading notes contents...");
-  const contents = await fetchPublicNoteContents(slug);
+  const { source: contents, id: slug } = await fetchPublicNoteContents(
+    searchKey
+  );
+  runDynamicBreadcrumb(slug);
   flashMessage("Loading compiler...");
   const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
@@ -71,6 +87,16 @@ async function runDynamic(slug: string) {
   flashMessage("Running...");
   await runCompiled(result.compiled);
   flashMessage("");
+}
+
+async function runDynamicBreadcrumb(slug: string) {
+  const tree = await fetchTree();
+  const items = generateBreadcrumbItems(tree, slug);
+  const html = generateBreadcrumbHtml(items);
+  const placeholder = document.querySelector("breadcrumb-placeholder");
+  if (placeholder) {
+    placeholder.outerHTML = html;
+  }
 }
 
 async function runNormal() {
@@ -121,4 +147,3 @@ async function runPrecompiled(precompiledNoteBehavior: Function) {
 }
 
 main();
-addHeaderToolbar();

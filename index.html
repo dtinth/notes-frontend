@@ -14,12 +14,23 @@
   </head>
   <body class="bg-#252423 text-#e9e8e7 antialiased">
     <header class="h-[58px] bg-#090807 border-b border-#454443 z-20 flex">
-      <div class="flex items-center px-[18px] flex-none">
-        <a class="flex items-center text-#8b8685 text-lg" href="/"
+      <div class="flex items-center pl-[18px] flex-none">
+        <a
+          class="flex items-center text-#8b8685 hover:text-#ffffbb text-lg"
+          href="/"
           >notes.dt.in.th</a
         >
       </div>
-      <div class="flex items-center ml-auto px-[18px]" id="headerToolbar"></div>
+      <div
+        class="flex-1 flex items-center text-#8b8685 [&_a:hover]:text-#ffffbb overflow-hidden"
+        id="headerMiddle"
+      >
+        <breadcrumb-placeholder></breadcrumb-placeholder>
+      </div>
+      <div
+        class="flex items-center px-[18px] flex-none"
+        id="headerToolbar"
+      ></div>
     </header>
     <div class="h-entry">
       <main class="bg-#353433" id="main">
