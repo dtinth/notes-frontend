@@ -38,6 +38,7 @@ export default {
             "--tw-prose-links": "#ffffbb",
             "--tw-prose-bold": "#fff",
             "--tw-prose-lead": "inherit",
+            overflowWrap: "break-word",
             letterSpacing: ".01em",
             maxWidth: "none",
             a: {
@@ -89,6 +90,19 @@ export default {
             blockquote: {
               fontStyle: "inherit",
               fontWeight: "inherit",
+            },
+            details: {
+              border: "1px solid #656463",
+              borderRadius: "4px",
+              padding: "0.25em 0.5em",
+            },
+            summary: {
+              cursor: "pointer",
+              padding: "0.25em 0.5em",
+              margin: "-0.25em -0.5em",
+            },
+            "summary::marker": {
+              color: "#8b8685",
             },
           },
         },

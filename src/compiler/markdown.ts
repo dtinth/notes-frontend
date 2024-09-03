@@ -1,7 +1,11 @@
 import rehypeShikiFromHighlighter from "@shikijs/rehype/core";
 import matter from "gray-matter";
 import { micromark } from "micromark";
-import { directive, directiveHtml } from "micromark-extension-directive";
+import {
+  directive,
+  directiveHtml,
+  Handle,
+} from "micromark-extension-directive";
 import { gfmFootnote, gfmFootnoteHtml } from "micromark-extension-gfm-footnote";
 import {
   gfmStrikethrough,
@@ -56,6 +60,22 @@ export async function markdownToVue(
           this.tag("</div>");
           return true;
         },
+        info: createCallout("Info"),
+        tip: createCallout("Tip"),
+        important: createCallout("Important"),
+        warning: createCallout("Warning"),
+        caution: createCallout("Caution"),
+        danger: createCallout("Danger"),
+        details: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag("<details>");
+          this.tag(`<summary>`);
+          this.raw(directive.label || "Details");
+          this.tag("</summary>");
+          if (directive.content) this.raw(directive.content);
+          this.tag("</details>");
+          return true;
+        },
         "*": function (directive) {
           if (directive.content) {
             this.raw(directive.content);
@@ -90,4 +110,18 @@ export async function markdownToVue(
 interface MarkdownToVueResult {
   vueTemplate: string;
   frontMatter: Record<string, any>;
+}
+
+function createCallout(type: string): Handle {
+  return function (directive) {
+    if (directive.type !== "containerDirective") return false;
+    this.tag(`<div class="notes-callout" data-type="${type}">`);
+    this.tag(`<p class="notes-callout__label">`);
+    this.tag(`<notes-callout-icon type="${type}"></notes-callout-icon>`);
+    this.raw(directive.label || type);
+    this.tag(`</p>`);
+    if (directive.content) this.raw(directive.content);
+    this.tag("</div>");
+    return true;
+  };
 }

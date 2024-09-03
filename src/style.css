@@ -2,14 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-.notes-lead {
-  @apply prose-lg md:prose-xl;
-}
-
 .notes-layout-container {
   @apply max-w-4xl;
 }
 
 :root[data-layout="wide"] .notes-layout-container {
   @apply max-w-6xl;
+}
+
+.btn {
+  @apply px-4 py-2 bg-#090807 rounded-lg shadow-md hover:bg-#454443 focus:outline-none focus:ring-2 focus:ring-#d7fc70 focus:ring-opacity-75 transition duration-300 hover:duration-0 ease-out;
+}
+
+/* Footnotes */
+[data-dtinth] .littlefoot {
+  --button-background-color: transparent;
+  --button-active-background-color: #090807;
+  --button-border-radius: 1.4em;
+  --button-active-text-color: #d7fc70;
+  --button-height: 1.4em;
+  --button-width: 1.4em;
+  --button-padding: 0;
+  --button-text-color: #8b8685;
+  --popover-background-color: #090807;
+  --popover-border: 1px solid #656463;
+  --popover-text-color: #e9e8e7;
+}
+[data-dtinth] .littlefoot__button {
+  display: inline-flex;
+  box-sizing: border-box;
+  width: var(--button-width);
+  border: 1px solid #8b8685;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-1px);
+}
+
+/* Callouts */
+.notes-callout {
+  @apply rounded px-2 py-1 my-5 bg-[--callout-bg] border-[--callout-border] text-[--callout-text] border;
+  --callout-bg: #09080722;
+  --callout-border: #656463;
+  --callout-title: #d7fc70;
+  --callout-text: inherit;
+}
+.notes-callout[data-type="Info"] {
+  @apply [--callout-bg:theme(colors.blue.900/0.2)] [--callout-border:theme(colors.blue.300/0.33)] [--callout-title:theme(colors.blue.300)] [--callout-text:theme(colors.blue.100)];
+}
+.notes-callout[data-type="Warning"] {
+  @apply [--callout-bg:theme(colors.yellow.900/0.2)] [--callout-border:theme(colors.yellow.300/0.33)] [--callout-title:theme(colors.yellow.300)] [--callout-text:theme(colors.yellow.100)];
+}
+.notes-callout[data-type="Important"] {
+  @apply [--callout-bg:theme(colors.purple.900/0.2)] [--callout-border:theme(colors.purple.300/0.33)] [--callout-title:theme(colors.purple.300)] [--callout-text:theme(colors.purple.100)];
+}
+.notes-callout[data-type="Caution"],
+.notes-callout[data-type="Danger"] {
+  @apply [--callout-bg:theme(colors.red.900/0.2)] [--callout-border:theme(colors.red.300/0.33)] [--callout-title:theme(colors.red.300)] [--callout-text:theme(colors.red.100)];
+}
+
+.notes-callout > p:first-child {
+  @apply mt-0;
+}
+.notes-callout > p:last-child {
+  @apply mb-0;
+}
+.notes-callout__label {
+  @apply font-bold mb-0 text-[--callout-title];
+}
+.notes-callout__label + p {
+  @apply mt-0;
 }

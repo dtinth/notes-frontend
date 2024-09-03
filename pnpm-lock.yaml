@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      littlefoot:
+        specifier: ^4.1.1
+        version: 4.1.1
     devDependencies:
       '@fastify/static':
         specifier: ^7.0.4
@@ -344,6 +348,15 @@ packages:
   '@nodelib/fs.walk@1.2.8':
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
+
+  '@pacote/get-style@2.0.2':
+    resolution: {integrity: sha512-5Pwu8fOk0TNjP/yAsw8WgwgOnC1r890i51utJ1vjSjUolbrjv3TEtZHMKY00NzeEXIl3Gt5v8W5po3H/ftdhWw==}
+
+  '@pacote/pixels@2.0.2':
+    resolution: {integrity: sha512-VkvJ595J6xZ0hIRoD2rJtR0J+k7b5hCs8vzkMvr1/JIlk74MltOGYhCcr4u/iGQeSwkYCi28iLORwO4X4si5XQ==}
+
+  '@pacote/throttle@2.0.2':
+    resolution: {integrity: sha512-Yn8SbAAFRTiVXBvh8E0aGG44TUZOueQFtHqjIwfYkoKJHknchc3PjktiMbRFBFUCWZiS68lHP9K1gXdGu/Z1vQ==}
 
   '@pkgjs/parseargs@0.11.0':
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
@@ -1084,6 +1097,9 @@ packages:
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
+
+  littlefoot@4.1.1:
+    resolution: {integrity: sha512-Nnk/aHexC97XtgOubB0kNKPECD1ccyD9Zrs9g5P0Cn+/G73w5bNV+9GQGD0s9Bealg+7Rgs9vcDOXCL4fQ7MTg==}
 
   lodash-es@4.17.21:
     resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
@@ -1932,6 +1948,14 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.17.1
 
+  '@pacote/get-style@2.0.2': {}
+
+  '@pacote/pixels@2.0.2':
+    dependencies:
+      '@pacote/get-style': 2.0.2
+
+  '@pacote/throttle@2.0.2': {}
+
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
@@ -2730,6 +2754,12 @@ snapshots:
   lilconfig@3.1.2: {}
 
   lines-and-columns@1.2.4: {}
+
+  littlefoot@4.1.1:
+    dependencies:
+      '@pacote/get-style': 2.0.2
+      '@pacote/pixels': 2.0.2
+      '@pacote/throttle': 2.0.2
 
   lodash-es@4.17.21: {}
 
