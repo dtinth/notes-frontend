@@ -48,7 +48,7 @@ async function addHeaderToolbar() {
 }
 
 async function checkScreenshotMode() {
-  if ("#og:image" === location.hash) {
+  if ("#og:image" === location.hash || "#og_image" === location.hash) {
     document.documentElement.setAttribute("data-screenshot-mode", "true");
   }
 }
