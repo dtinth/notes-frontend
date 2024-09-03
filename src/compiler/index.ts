@@ -6,7 +6,7 @@ import * as Vue from "vue";
 import * as compiler from "vue/compiler-sfc";
 import * as VueServerRenderer from "vue/server-renderer";
 import { processTitle, wrapHtml } from "../linker";
-import { executeCjs } from "../runtime/vue3";
+import { executeCjs, registerComponents } from "../runtime/vue3";
 import { markdownToVue } from "./markdown";
 
 const uno = createGenerator({
@@ -138,6 +138,7 @@ export async function compileMarkdown(
     });
     const Component = ssrResult.default;
     const app = Vue.createSSRApp(Component);
+    registerComponents(app);
     const html = await VueServerRenderer.renderToString(app);
     result.compiled.html = html;
     log("ssr executed");
@@ -210,4 +211,5 @@ export function applyTemplate(input: {
     /<content-placeholder>([^]*?)<\/content-placeholder>/,
     () => wrapHtml(compiled.html)
   );
+  return html;
 }

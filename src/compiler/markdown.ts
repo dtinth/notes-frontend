@@ -34,7 +34,35 @@ export async function markdownToVue(
       gfmFootnoteHtml(),
       gfmStrikethroughHtml(),
       gfmTableHtml(),
-      directiveHtml({}),
+      directiveHtml({
+        lead: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag('<div class="lead">');
+          if (directive.content) this.raw(directive.content);
+          this.tag("</div>");
+          return true;
+        },
+        split: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag("<d-split>");
+          if (directive.content) this.raw(directive.content);
+          this.tag("</d-split>");
+          return true;
+        },
+        aside: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag('<div slot="right">');
+          if (directive.content) this.raw(directive.content);
+          this.tag("</div>");
+          return true;
+        },
+        "*": function (directive) {
+          if (directive.content) {
+            this.raw(directive.content);
+          }
+          return true;
+        },
+      }),
     ],
   });
   log("micromark processed");

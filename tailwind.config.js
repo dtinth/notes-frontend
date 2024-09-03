@@ -37,6 +37,7 @@ export default {
             "--tw-prose-quotes": "#e9d7c5",
             "--tw-prose-links": "#ffffbb",
             "--tw-prose-bold": "#fff",
+            "--tw-prose-lead": "inherit",
             letterSpacing: ".01em",
             maxWidth: "none",
             a: {

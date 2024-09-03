@@ -22,5 +22,11 @@ export function executeCjs(
 export function hydrate(js: string | Function, target: string) {
   const Component = executeCjs(js, {}).default;
   const app = Vue.createSSRApp(Component);
+  registerComponents(app);
   app.mount(target);
+}
+
+export function registerComponents(app: Vue.App) {
+  void app;
+  // app.component()
 }
