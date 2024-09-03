@@ -7,10 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      littlefoot:
-        specifier: ^4.1.1
-        version: 4.1.1
     devDependencies:
       '@fastify/static':
         specifier: ^7.0.4
@@ -60,6 +56,9 @@ importers:
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
+      littlefoot:
+        specifier: ^4.1.1
+        version: 4.1.1
       lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
