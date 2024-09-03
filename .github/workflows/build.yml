@@ -18,7 +18,7 @@ jobs:
       - name: Build
         run: pnpm run build
       - name: Package
-        run: pnpm version 0.0.$(date +'%y%m%d%H%M%S') && pnpm pack
+        run: pnpm version 0.0.$(date +'%y%m%d%H%M%S') --no-git-tag-version && pnpm pack
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
