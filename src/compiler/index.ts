@@ -162,6 +162,11 @@ export async function compileMarkdown(
       ["meta", { property: "og:image:width", content: "1800" }],
       ["meta", { property: "og:image:height", content: "1680" }]
     );
+    const canonicalUrl = `https://notes.dt.in.th/${slug}`;
+    result.compiled.head.push([
+      "link",
+      { rel: "canonical", href: canonicalUrl },
+    ]);
   } catch (e) {
     result.errors.push(errorToString(e));
   }
