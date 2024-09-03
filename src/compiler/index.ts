@@ -184,8 +184,9 @@ export function applyTemplate(input: {
     js: string;
     html: string;
   };
+  breadcrumb?: string;
 }) {
-  const { template, compiled } = input;
+  const { template, compiled, breadcrumb } = input;
   let html = template;
 
   let dataAttributes = " data-precompiled=true";
@@ -207,6 +208,12 @@ export function applyTemplate(input: {
     () =>
       `<script>window.precompiledNoteBehavior = function(require, exports, module, Vue) {${compiled.js}}</script>`
   );
+  if (breadcrumb != null) {
+    html = html.replace(
+      /<breadcrumb-placeholder>([^]*?)<\/breadcrumb-placeholder>/,
+      () => breadcrumb
+    );
+  }
   html = html.replace(
     /<content-placeholder>([^]*?)<\/content-placeholder>/,
     () => wrapHtml(compiled.html)
