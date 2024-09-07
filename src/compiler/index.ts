@@ -187,6 +187,7 @@ async function esmToCjs(
   log("sucrase imported");
   const result = sucrase.transform(esm, {
     transforms: ["imports"],
+    preserveDynamicImport: true,
   });
   log("transformed");
   return result.code;
