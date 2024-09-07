@@ -41,8 +41,10 @@ async function addHeaderToolbar() {
   const searchButton = document.createElement("button");
   searchButton.className = "flex items-center text-#8b8685";
   searchButton.title = "Search";
-  searchButton.onclick = () => {
-    alert("Coming soon :)");
+  const searchPromise = import("./search");
+  searchButton.onclick = async () => {
+    const { openSearch } = await searchPromise;
+    openSearch();
   };
   const searchIconElement = document.createElement("iconify-icon");
   searchIconElement.setAttribute("icon", JSON.stringify(searchIcon));
