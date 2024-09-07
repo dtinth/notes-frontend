@@ -158,6 +158,7 @@ export async function compileMarkdown(
     }
     const ogImage = `https://screenshot.source.in.th/image/_/notes/${slug}`;
     result.compiled.head.push(
+      ["meta", { property: "og:title", content: result.compiled.title }],
       ["meta", { property: "og:image", content: ogImage }],
       ["meta", { property: "og:image:width", content: "1800" }],
       ["meta", { property: "og:image:height", content: "1680" }]
@@ -215,7 +216,7 @@ export function applyTemplate(input: {
       generateHead(compiled.head) +
       (!compiled.css || compiled.css === "/* No <style> tags present */"
         ? ""
-        : `<style>${compiled.css}</style>`)
+        : `<style id="note-styles">${compiled.css}</style>`)
   );
   html = html.replace(
     /<script id="js-placeholder"[^]*?<\/script>/,

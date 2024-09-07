@@ -1,14 +1,15 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("can search and navigate to a search result", async ({ page }) => {
   await page.goto("/HomePage");
-  await page.locator('input[type="search"]').waitFor({ state: "attached" });
+  await expect(page.locator("#search-button")).toBeVisible();
   await page.keyboard.press("Meta+k");
+  await page.getByPlaceholder("Search for a note…").fill("codespaces x11");
   await page
-    .locator('[placeholder="Search for a note…"]')
-    .fill("codespaces x11");
-  await page
-    .locator("text=Run an X11 display server and noVNC on Codespaces")
+    .getByRole("link", {
+      name: "Run an X11 display server and noVNC on Codespaces",
+    })
+    .first()
     .click();
   await expect(page).toHaveURL(/CodespacesDisplayServer/);
 });

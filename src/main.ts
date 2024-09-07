@@ -23,6 +23,7 @@ function main() {
   addHeaderToolbar();
   checkScreenshotMode();
   enableQuickLink();
+  addKeybinds();
   if (location.pathname === "/preview") {
     return runPreviewer();
   } else {
@@ -41,6 +42,7 @@ async function addHeaderToolbar() {
   const searchButton = document.createElement("button");
   searchButton.className = "flex items-center text-#8b8685";
   searchButton.title = "Search";
+  searchButton.id = "search-button";
   const searchPromise = import("./search");
   searchButton.onclick = async () => {
     const { openSearch } = await searchPromise;
@@ -70,6 +72,16 @@ async function addHeaderToolbar() {
 
 async function enableQuickLink() {
   quicklink.listen();
+}
+
+async function addKeybinds() {
+  const keyboardListener = (e: KeyboardEvent): void => {
+    if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      document.querySelector<HTMLButtonElement>("#search-button")?.click();
+    }
+  };
+  document.addEventListener("keydown", keyboardListener);
 }
 
 async function checkScreenshotMode() {
@@ -156,10 +168,30 @@ function showStatus(status: string) {
 }
 
 async function runCompiled(compiled: CompiledNote) {
-  document.querySelector("#mainContents")!.innerHTML = `
-    <style>${compiled.css}</style>
-    ${wrapHtml(compiled.html)}
-  `;
+  document.querySelector("#mainContents")!.innerHTML = wrapHtml(compiled.html);
+
+  const noteStyles = document.querySelector("#note-styles");
+  if (noteStyles) {
+    noteStyles.remove();
+  }
+  const newNoteStyles = document.createElement("style");
+  newNoteStyles.id = "note-styles";
+  newNoteStyles.innerHTML = compiled.css;
+  document.head.appendChild(newNoteStyles);
+
+  const oldTags = document.querySelectorAll("head [data-source='note']");
+  for (const tag of oldTags) {
+    tag.remove();
+  }
+  for (const [tag, attributes] of compiled.head) {
+    const element = document.createElement(tag);
+    for (const [key, value] of Object.entries(attributes)) {
+      element.setAttribute(key, value);
+    }
+    element.dataset.source = "note";
+    document.head.appendChild(element);
+  }
+
   document.title = processTitle(compiled.title);
   for (const [key, value] of Object.entries(compiled.dataset)) {
     document.documentElement.dataset[key] = value;

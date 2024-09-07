@@ -27,6 +27,7 @@
   --popover-background-color: #090807;
   --popover-border: 1px solid #656463;
   --popover-text-color: #e9e8e7;
+  --popover-font-family: theme(fontFamily.sans);
 }
 [data-dtinth] .littlefoot__button {
   display: inline-flex;

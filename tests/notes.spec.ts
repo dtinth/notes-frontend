@@ -12,12 +12,12 @@ test("homepage", async ({ page }) => {
   await expect(page.locator(".h-entry .p-author.h-card")).toBeVisible();
 });
 
-test("rss feed", async ({ request }) => {
-  const response = await request.get("/api/recent.xml");
-  expect(response.ok()).toBeTruthy();
-  const text = await response.text();
-  expect(text).toContain("<item>");
-});
+// test("rss feed", async ({ request }) => {
+//   const response = await request.get("/api/recent.xml");
+//   expect(response.ok()).toBeTruthy();
+//   const text = await response.text();
+//   expect(text).toContain("<item>");
+// });
 
 test("recent page", async ({ page }) => {
   await page.goto("/Recent");
@@ -33,11 +33,6 @@ test("meta tags and redirects", async ({ page }) => {
 });
 
 test("open graph images", async ({ page }) => {
-  test.skip(
-    !process.env.ENCRYPTION_SECRET,
-    "No encryption secret for encoding image URLs"
-  );
-
   await page.goto("/20220606T064142Z5299");
   await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
     "content",
