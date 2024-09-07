@@ -33,6 +33,23 @@ function main() {
 async function addHeaderToolbar() {
   const toolbar = document.getElementById("headerToolbar") as HTMLDivElement;
 
+  const searchIcon = {
+    width: 24,
+    height: 24,
+    body: '<path fill="currentColor" d="M15.25 0a8.25 8.25 0 0 0-6.18 13.72L1 22.88l1.12 1l8.05-9.12A8.251 8.251 0 1 0 15.25.01V0zm0 15a6.75 6.75 0 1 1 0-13.5a6.75 6.75 0 0 1 0 13.5z"/>',
+  };
+  const searchButton = document.createElement("button");
+  searchButton.className = "flex items-center text-#8b8685";
+  searchButton.title = "Search";
+  searchButton.onclick = () => {
+    alert("Coming soon :)");
+  };
+  const searchIconElement = document.createElement("iconify-icon");
+  searchIconElement.setAttribute("icon", JSON.stringify(searchIcon));
+  searchIconElement.setAttribute("height", "24");
+  searchButton.appendChild(searchIconElement);
+  toolbar.appendChild(searchButton);
+
   const webringIcon = {
     body: `<path fill-rule="evenodd" clip-rule="evenodd" d="M53 128.8l-16-8.2a192 192 0 1094.7-88.9l7.1 16.6A174 174 0 1153 128.8z" fill="#8b8685"></path> <path d="M94.7 92.3L82 126.5 62.6 95.7l-36.4-1.4 23.3-28-9.9-35.1 33.9 13.5 30.3-20.3-2.4 36.4L130 83.3l-35.3 9z" fill="#d7fc70"></path>`,
     width: 416,

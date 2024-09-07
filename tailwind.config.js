@@ -38,6 +38,8 @@ export default {
             "--tw-prose-links": "#ffffbb",
             "--tw-prose-bold": "#fff",
             "--tw-prose-lead": "inherit",
+            "--tw-prose-th-borders": "#8b8685",
+            "--tw-prose-td-borders": "#656463",
             overflowWrap: "break-word",
             letterSpacing: ".01em",
             maxWidth: "none",
@@ -102,6 +104,9 @@ export default {
               margin: "-0.25em -0.5em",
             },
             "summary::marker": {
+              color: "#8b8685",
+            },
+            "thead th": {
               color: "#8b8685",
             },
           },
