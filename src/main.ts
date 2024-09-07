@@ -4,6 +4,7 @@ import "@fontsource/arimo/600.css";
 import "@fontsource/arimo/700.css";
 import "comic-mono/index.css";
 import "littlefoot/dist/littlefoot.css";
+import * as quicklink from "quicklink";
 import "../vendor/raster.grid.css";
 import { CompiledNote } from "./compiler";
 import "./custom-elements/d-split";
@@ -21,6 +22,7 @@ import "./style.css";
 function main() {
   addHeaderToolbar();
   checkScreenshotMode();
+  enableQuickLink();
   if (location.pathname === "/preview") {
     return runPreviewer();
   } else {
@@ -45,6 +47,10 @@ async function addHeaderToolbar() {
   icon.setAttribute("height", "32");
   webring.appendChild(icon);
   toolbar.appendChild(webring);
+}
+
+async function enableQuickLink() {
+  quicklink.listen();
 }
 
 async function checkScreenshotMode() {
@@ -78,6 +84,12 @@ async function runDynamic(searchKey: string) {
   const { source: contents, id: slug } = await fetchPublicNoteContents(
     searchKey
   );
+  if (
+    location.pathname !== `/${slug}` &&
+    (location.pathname === `/${searchKey}` || location.pathname === `/`)
+  ) {
+    history.replaceState({}, "", `/${slug}`);
+  }
   runDynamicBreadcrumb(slug);
   flashMessage("Loading compiler...");
   const { compileMarkdown } = await getCompiler();
