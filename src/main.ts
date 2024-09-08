@@ -8,6 +8,7 @@ import * as quicklink from "quicklink";
 import "../vendor/raster.grid.css";
 import { CompiledNote } from "./compiler";
 import "./custom-elements/d-split";
+import "./custom-elements/note-footer";
 import "./custom-elements/notes-page-footer";
 import { flashMessage } from "./flash-message";
 import { fetchPublicNoteContents, fetchTree } from "./io";
@@ -17,6 +18,7 @@ import {
   processTitle,
   wrapHtml,
 } from "./linker";
+import { fetchPrivateNoteContents } from "./private-io";
 import "./style.css";
 
 function main() {
@@ -24,11 +26,7 @@ function main() {
   checkScreenshotMode();
   enableQuickLink();
   addKeybinds();
-  if (location.pathname === "/preview") {
-    return runPreviewer();
-  } else {
-    return runNormal();
-  }
+  return runMain();
 }
 
 async function addHeaderToolbar() {
@@ -100,21 +98,21 @@ async function getCompiler() {
   ) as Promise<typeof import("./compiler")>;
 }
 
-async function runPreviewer() {
-  showStatus("Loading compiler...");
-  const { compileMarkdown } = await getCompiler();
-  Object.assign(window, { compileMarkdown });
-  showStatus("Compiling...");
-  const result = await compileMarkdown("whee!", "Preview");
-  console.log(result);
-  await runCompiled(result.compiled);
-}
-
-async function runDynamic(searchKey: string) {
+async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
   flashMessage("Loading notes contents...");
-  const { source: contents, id: slug } = await fetchPublicNoteContents(
-    searchKey
-  );
+  const fetchContents = async () => {
+    if (options.isPrivate) {
+      const a = document.querySelector("header a");
+      if (a) {
+        a.innerHTML +=
+          ' <span class="ml-1 bg-red-400 text-black inline-block align-middle px-1 text-sm rounded font-bold uppercase">Private</span>';
+      }
+      return fetchPrivateNoteContents(searchKey);
+    } else {
+      return fetchPublicNoteContents(searchKey);
+    }
+  };
+  const { source: contents, id: slug } = await fetchContents();
   if (
     location.pathname !== `/${slug}` &&
     (location.pathname === `/${searchKey}` || location.pathname === `/`)
@@ -142,29 +140,25 @@ async function runDynamicBreadcrumb(slug: string) {
   }
 }
 
-async function runNormal() {
+async function runMain() {
   const precompilation = window as unknown as {
     precompiledNoteBehavior?: Function;
+    precompiledFrontMatter?: Record<string, any>;
   };
   if (precompilation.precompiledNoteBehavior) {
-    await runPrecompiled(precompilation.precompiledNoteBehavior);
+    await runPrecompiled(
+      precompilation.precompiledNoteBehavior,
+      precompilation.precompiledFrontMatter || {}
+    );
   } else {
     const pathname = location.pathname;
-    const match = pathname.match(/^\/([A-Za-z0-9]+)$/);
+    const match = pathname.match(/^\/(private\/)?([A-Za-z0-9]+)$/);
     if (match) {
-      await runDynamic(match[1]);
+      await runDynamic(match[2], { isPrivate: !!match[1] });
     } else {
-      await runDynamic("HomePage");
+      await runDynamic("HomePage", { isPrivate: false });
     }
   }
-}
-
-function showStatus(status: string) {
-  document.querySelector("#mainContents")!.innerHTML = `
-  <div class="prose">
-    <h1>${status}</h1>
-  </div>
-  `;
 }
 
 async function runCompiled(compiled: CompiledNote) {
@@ -200,13 +194,26 @@ async function runCompiled(compiled: CompiledNote) {
     'This note has been dynamically compiled. To inspect the compiled code, open the console and type "compiled".'
   );
   Object.assign(window, { compiled });
+  handleFrontMatter(compiled.frontMatter);
   const { hydrate } = await import("./runtime/vue3");
   hydrate(compiled.js, "#noteContents");
 }
 
-async function runPrecompiled(precompiledNoteBehavior: Function) {
+async function runPrecompiled(
+  precompiledNoteBehavior: Function,
+  frontMatter: Record<string, any>
+) {
+  handleFrontMatter(frontMatter);
   const { hydrate } = await import("./runtime/vue3");
   hydrate(precompiledNoteBehavior, "#noteContents");
+}
+
+async function handleFrontMatter(frontMatter: Record<string, any>) {
+  console.log("Front matter:", frontMatter);
+  const mainContents = document.querySelector<HTMLDivElement>("#mainContents");
+  const footer = document.createElement("note-footer");
+  footer.setAttribute("front-matter", JSON.stringify(frontMatter));
+  mainContents?.appendChild(footer);
 }
 
 main();

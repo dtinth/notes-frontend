@@ -21,7 +21,6 @@ const uno = createGenerator({
 
 export interface CompileMarkdownResult {
   compiled: CompiledNote;
-  frontMatter: Record<string, any>;
   errors: string[];
   debuggingInfo: DebuggingInfo;
   log: [time: number, message: string][];
@@ -45,6 +44,9 @@ export interface CompiledNote {
 
   /** Elements to add to the head of the page */
   head: HeadElement[];
+
+  /** Front matter data */
+  frontMatter: Record<string, any>;
 }
 
 type HeadElement =
@@ -70,8 +72,8 @@ export async function compileMarkdown(
       title: slug,
       dataset: {},
       head: [],
+      frontMatter: {},
     },
-    frontMatter: {},
     errors: [],
     debuggingInfo: {},
     log: [],
@@ -84,7 +86,7 @@ export async function compileMarkdown(
     // Step 1: Markdown -> Vue SFC
     let { vueTemplate, frontMatter } = await markdownToVue(source, log);
     result.debuggingInfo.vueTemplate = vueTemplate;
-    result.frontMatter = frontMatter;
+    result.compiled.frontMatter = frontMatter;
 
     // Step 2: Add UnoCSS
     {
@@ -221,7 +223,15 @@ export function applyTemplate(input: {
   html = html.replace(
     /<script id="js-placeholder"[^]*?<\/script>/,
     () =>
-      `<script>window.precompiledNoteBehavior = function(require, exports, module, Vue) {${compiled.js}}</script>`
+      `<script>
+window.precompiledNoteBehavior = function(require, exports, module, Vue) {${
+        compiled.js
+      }};
+window.precompiledFrontMatter = ${JSON.stringify(compiled.frontMatter).replace(
+        /</g,
+        "\\u003c"
+      )};
+</script>`
   );
   if (publicTree) {
     const items = generateBreadcrumbItems(publicTree, slug);

@@ -17,6 +17,7 @@ export default defineConfig({
         },
         manualChunks: {
           vue: ["vue"],
+          supabase: ["@supabase/supabase-js"],
         },
       },
     },

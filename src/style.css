@@ -14,6 +14,10 @@
   @apply px-4 py-2 bg-#090807 rounded-lg shadow-md hover:bg-#454443 focus:outline-none focus:ring-2 focus:ring-#d7fc70 focus:ring-opacity-75 transition duration-300 hover:duration-0 ease-out;
 }
 
+.form-control {
+  @apply block w-full px-3 py-2 bg-#090807 text-#e9e8e7 placeholder-#8b8685 border border-#656463 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-#d7fc70 focus:ring-opacity-75 transition duration-300 hover:duration-0 ease-out;
+}
+
 /* Footnotes */
 [data-dtinth] .littlefoot {
   --button-background-color: transparent;
