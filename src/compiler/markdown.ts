@@ -16,7 +16,7 @@ import { rehype } from "rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeSlug from "rehype-slug";
 import rehypeVueSFC from "rehype-vue-sfc";
-import { createHighligher } from "./shiki";
+import { getHighlighter } from "./shiki";
 
 export async function markdownToVue(
   text: string,
@@ -91,7 +91,7 @@ export async function markdownToVue(
     .data("settings", { fragment: true })
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings)
-    .use(rehypeShikiFromHighlighter, (await createHighligher()) as any, {
+    .use(rehypeShikiFromHighlighter, (await getHighlighter()) as any, {
       theme: "github-dark",
       colorReplacements: {
         "#24292e": "#252423",
