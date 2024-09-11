@@ -60,6 +60,8 @@ export async function markdownToVue(
           this.tag("</div>");
           return true;
         },
+        note: createCallout("Note"),
+        success: createCallout("Success"),
         info: createCallout("Info"),
         tip: createCallout("Tip"),
         important: createCallout("Important"),

@@ -43,26 +43,38 @@
   transform: translateY(-1px);
 }
 
+/* Lead text */
+.prose > .lead:first-child > *:first-child {
+  @apply mt-0;
+}
+
 /* Callouts */
 .notes-callout {
-  @apply rounded px-2 py-1 my-5 bg-[--callout-bg] border-[--callout-border] text-[--callout-text] border;
+  @apply rounded px-3 py-2 my-5 -mx-[13px] bg-[--callout-bg] border-[--callout-border] text-[--callout-text] border;
   --callout-bg: #09080722;
   --callout-border: #656463;
   --callout-title: #d7fc70;
   --callout-text: inherit;
+  box-shadow: 2px 2px 0 #00000040;
+}
+.notes-callout[data-type="Success"] {
+  @apply [--callout-bg:theme(colors.green.900/0.2)] [--callout-border:theme(colors.green.300/0.33)] [--callout-title:theme(colors.green.300)] [--callout-text:theme(colors.green.50)];
+}
+.notes-callout[data-type="Note"] {
+  @apply [--callout-bg:theme(colors.blue.900/0.2)] [--callout-border:theme(colors.blue.300/0.33)] [--callout-title:theme(colors.blue.300)] [--callout-text:theme(colors.blue.50)];
 }
 .notes-callout[data-type="Info"] {
-  @apply [--callout-bg:theme(colors.blue.900/0.2)] [--callout-border:theme(colors.blue.300/0.33)] [--callout-title:theme(colors.blue.300)] [--callout-text:theme(colors.blue.100)];
+  @apply [--callout-bg:theme(colors.blue.900/0.2)] [--callout-border:theme(colors.blue.300/0.33)] [--callout-title:theme(colors.blue.300)] [--callout-text:theme(colors.blue.50)];
 }
 .notes-callout[data-type="Warning"] {
-  @apply [--callout-bg:theme(colors.yellow.900/0.2)] [--callout-border:theme(colors.yellow.300/0.33)] [--callout-title:theme(colors.yellow.300)] [--callout-text:theme(colors.yellow.100)];
+  @apply [--callout-bg:theme(colors.yellow.900/0.2)] [--callout-border:theme(colors.yellow.300/0.33)] [--callout-title:theme(colors.yellow.300)] [--callout-text:theme(colors.yellow.50)];
 }
 .notes-callout[data-type="Important"] {
-  @apply [--callout-bg:theme(colors.purple.900/0.2)] [--callout-border:theme(colors.purple.300/0.33)] [--callout-title:theme(colors.purple.300)] [--callout-text:theme(colors.purple.100)];
+  @apply [--callout-bg:theme(colors.purple.900/0.2)] [--callout-border:theme(colors.purple.300/0.33)] [--callout-title:theme(colors.purple.300)] [--callout-text:theme(colors.purple.50)];
 }
 .notes-callout[data-type="Caution"],
 .notes-callout[data-type="Danger"] {
-  @apply [--callout-bg:theme(colors.red.900/0.2)] [--callout-border:theme(colors.red.300/0.33)] [--callout-title:theme(colors.red.300)] [--callout-text:theme(colors.red.100)];
+  @apply [--callout-bg:theme(colors.red.900/0.2)] [--callout-border:theme(colors.red.300/0.33)] [--callout-title:theme(colors.red.300)] [--callout-text:theme(colors.red.50)];
 }
 
 .notes-callout > p:first-child {
@@ -89,4 +101,12 @@
   background-image: url(./images/share-overlay.svg);
   background-repeat: no-repeat;
   background-position: 100% -24px;
+}
+
+figure.framed img,
+figure.framed picture {
+  background: #252423;
+  overflow: hidden;
+  border: 1px solid #656463;
+  box-shadow: 2px 2px 0 #00000040;
 }

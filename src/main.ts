@@ -1,15 +1,22 @@
+import "@fontsource/arimo/400-italic.css";
 import "@fontsource/arimo/400.css";
+import "@fontsource/arimo/500-italic.css";
 import "@fontsource/arimo/500.css";
+import "@fontsource/arimo/600-italic.css";
 import "@fontsource/arimo/600.css";
+import "@fontsource/arimo/700-italic.css";
 import "@fontsource/arimo/700.css";
+import memoizeOne from "async-memoize-one";
 import "comic-mono/index.css";
 import "littlefoot/dist/littlefoot.css";
 import * as quicklink from "quicklink";
 import "../vendor/raster.grid.css";
 import { CompiledNote } from "./compiler";
 import "./custom-elements/d-split";
+import "./custom-elements/embed-container";
 import "./custom-elements/note-footer";
 import "./custom-elements/notes-page-footer";
+import "./custom-elements/youtube-embed";
 import { flashMessage } from "./flash-message";
 import { fetchPublicNoteContents, fetchTree } from "./io";
 import {
@@ -98,15 +105,30 @@ async function getCompiler() {
   ) as Promise<typeof import("./compiler")>;
 }
 
+let onReload = () => {};
+const enablePrivateMode = memoizeOne(async () => {
+  const a = document.querySelector<HTMLAnchorElement>("header a");
+  if (a) {
+    a.href = "HomePage";
+    a.innerHTML +=
+      ' <span class="ml-1 bg-red-400 text-black inline-block align-middle px-1 text-sm rounded font-bold uppercase">Private</span>';
+  }
+
+  window.addEventListener("keydown", async (e) => {
+    if (e.key === "r") {
+      onReload();
+    }
+  });
+});
+
 async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
   flashMessage("Loading notes contents...");
   const fetchContents = async () => {
     if (options.isPrivate) {
-      const a = document.querySelector("header a");
-      if (a) {
-        a.innerHTML +=
-          ' <span class="ml-1 bg-red-400 text-black inline-block align-middle px-1 text-sm rounded font-bold uppercase">Private</span>';
-      }
+      enablePrivateMode();
+      onReload = () => {
+        runDynamic(searchKey, options);
+      };
       return fetchPrivateNoteContents(searchKey);
     } else {
       return fetchPublicNoteContents(searchKey);

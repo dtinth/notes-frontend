@@ -96,7 +96,9 @@ export default {
             details: {
               border: "1px solid #656463",
               borderRadius: "4px",
-              padding: "0.25em 0.5em",
+              padding: "0.5rem 0.75rem",
+              margin: "1.25rem -13px",
+              boxShadow: "2px 2px 0 #00000040",
             },
             summary: {
               cursor: "pointer",
