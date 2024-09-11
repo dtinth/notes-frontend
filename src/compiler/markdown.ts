@@ -60,6 +60,29 @@ export async function markdownToVue(
           this.tag("</div>");
           return true;
         },
+        youtube: function (directive) {
+          if (directive.type !== "leafDirective") return false;
+          this.tag(
+            `<youtube-embed video-id="${directive.label}"></youtube-embed>`
+          );
+          return true;
+        },
+        cta: function (directive) {
+          if (directive.type !== "leafDirective") return false;
+          this.tag('<p class="notes-cta">');
+          this.tag(
+            `<a class="notes-cta__link" href="${directive.attributes?.href}">`
+          );
+          this.tag('<span class="notes-cta__title">');
+          this.raw(directive.label || "");
+          this.tag("</span>");
+          this.tag('<span class="notes-cta__url">');
+          this.raw(directive.attributes?.href || "");
+          this.tag("</span>");
+          this.tag("</a>");
+          this.tag("</p>");
+          return true;
+        },
         note: createCallout("Note"),
         success: createCallout("Success"),
         info: createCallout("Info"),

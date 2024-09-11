@@ -90,6 +90,26 @@
   @apply mt-0;
 }
 
+/* CTAs */
+.notes-cta__link {
+  @apply block no-underline text-#8b8685 border border-#656463 rounded-lg bg-#252423 p-4 transition-colors duration-100;
+  box-shadow: inset 0 0 1px #090807, inset 0 -10px 20px rgba(9, 8, 7, 0.2),
+    inset 0 2px 15px rgba(69, 68, 67, 0.7), 0 3px 4px rgba(9, 8, 7, 0.4);
+}
+.notes-cta__title {
+  @apply block pl-6 font-bold text-2xl text-#ffffbb transition-colors duration-100 bg-no-repeat bg-left;
+  background-image: url("data:image/svg+xml,%3Csvg data-v-328a090e='' width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath data-v-328a090e='' fill='%238B8685' d='M14.446 7.833l-6.743 6.476-1.698-1.916L9.643 9.19H.983V6.377h8.66L6.005 3.175 7.703 1.26l6.743 6.476z' fill-rule='evenodd'%3E%3C/path%3E%3C/svg%3E");
+}
+.notes-cta__url {
+  @apply block truncate pl-6;
+}
+.notes-cta__link:hover {
+  @apply bg-#353433;
+}
+.notes-cta__link:hover .notes-cta__title {
+  @apply text-white;
+}
+
 /* Share image generation mode */
 [data-screenshot-mode][data-dtinth] #main,
 [data-screenshot-mode][data-dtinth] header {
