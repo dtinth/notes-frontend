@@ -60,6 +60,39 @@ export async function markdownToVue(
           this.tag("</div>");
           return true;
         },
+        me: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag(`<div class="notes-bubble" data-author-position="right">`);
+          this.tag(
+            `<div class="notes-bubble__author"><span class="notes-bubble__me">Me:</span></div>`
+          );
+          this.tag(`<div class="notes-bubble__message">`);
+          if (directive.content) this.raw(directive.content);
+          this.tag(`</div>`);
+          this.tag(`</div>`);
+          return true;
+        },
+        thought: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag(`<div class="notes-bubble" data-author-position="right">`);
+          this.tag(`<div class="notes-bubble__message">`);
+          if (directive.content) this.raw(directive.content);
+          this.tag(`</div>`);
+          this.tag(`</div>`);
+          return true;
+        },
+        bubble: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag(`<div class="notes-bubble" data-author-position="left">`);
+          this.tag(
+            `<div class="notes-bubble__author"><notes-bubble-author author="${directive.label}"></notes-bubble-author></div>`
+          );
+          this.tag(`<div class="notes-bubble__message">`);
+          if (directive.content) this.raw(directive.content);
+          this.tag(`</div>`);
+          this.tag(`</div>`);
+          return true;
+        },
         youtube: function (directive) {
           if (directive.type !== "leafDirective") return false;
           this.tag(

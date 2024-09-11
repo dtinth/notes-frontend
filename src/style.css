@@ -110,6 +110,31 @@
   @apply text-white;
 }
 
+/* Chat bubbles */
+.notes-bubble {
+  @apply flex items-start gap-4 my-5;
+}
+.notes-bubble[data-author-position="right"] {
+  @apply flex-row-reverse;
+}
+.notes-bubble__author {
+  @apply w-8 h-8 overflow-hidden rounded-full relative flex-none bg-#454443;
+  box-shadow: 2px 2px 0 #00000040;
+}
+.notes-bubble__me {
+  @apply absolute inset-0 bg-#d7fc70 text-transparent;
+}
+.notes-bubble__message {
+  @apply bg-#252423 rounded-2xl py-2 px-3 border border-#656463 flex-shrink min-w-0;
+  box-shadow: 2px 2px 0 #00000040;
+}
+.notes-bubble__message > *:first-child {
+  @apply mt-0;
+}
+.notes-bubble__message > *:last-child {
+  @apply mb-0;
+}
+
 /* Share image generation mode */
 [data-screenshot-mode][data-dtinth] #main,
 [data-screenshot-mode][data-dtinth] header {
