@@ -15,6 +15,7 @@ import { CompiledNote } from "./compiler";
 import "./custom-elements/d-split";
 import "./custom-elements/embed-container";
 import "./custom-elements/note-footer";
+import "./custom-elements/notes-bubble-author";
 import "./custom-elements/notes-page-footer";
 import "./custom-elements/youtube-embed";
 import { flashMessage } from "./flash-message";
@@ -134,7 +135,13 @@ async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
       return fetchPublicNoteContents(searchKey);
     }
   };
-  const { source: contents, id: slug } = await fetchContents();
+  const {
+    source: contents,
+    id: slug,
+    compiled,
+    compiled_source_version,
+    source_version,
+  } = await fetchContents();
   if (
     location.pathname !== `/${slug}` &&
     (location.pathname === `/${searchKey}` || location.pathname === `/`)
@@ -143,6 +150,17 @@ async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
   }
   runDynamicBreadcrumb(slug);
   flashMessage("Loading compiler...");
+  const params = new URLSearchParams(location.search);
+  if (
+    compiled &&
+    compiled_source_version === source_version &&
+    !params.get("recompile")
+  ) {
+    flashMessage("Running...");
+    await runCompiled(JSON.parse(compiled));
+    flashMessage("");
+    return;
+  }
   const { compileMarkdown } = await getCompiler();
   Object.assign(window, { compileMarkdown });
   flashMessage("Compiling...");

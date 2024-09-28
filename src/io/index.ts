@@ -4,6 +4,9 @@ import { Tree } from "../linker";
 export interface NotesGetContentsResult {
   source: string;
   id: string;
+  source_version?: string;
+  compiled?: string;
+  compiled_source_version?: string;
 }
 
 export async function fetchPublicNoteContents(slug: string) {

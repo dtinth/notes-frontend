@@ -6,7 +6,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Arimo", ...defaultTheme.fontFamily.sans],
+        sans: ["Arimo", "Helvetica", "Arial", ...defaultTheme.fontFamily.sans],
         mono: ["Comic Mono", ...defaultTheme.fontFamily.mono],
       },
       colors: {
