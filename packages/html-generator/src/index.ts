@@ -1,3 +1,4 @@
+import type { CompiledNote, HeadElement } from "@notes/types";
 import escape from "lodash-es/escape";
 
 export function wrapHtml(html: string) {
@@ -58,8 +59,8 @@ export function generateBreadcrumbItems(
   return items;
 }
 
-export function generateHtml() {
-  return `<!DOCTYPE html>
+export function generateHtml(precompiled?: PrecompiledInput) {
+  let html = `<!DOCTYPE html>
 <html lang="en" data-dtinth="true">
   <head>
     <meta charset="UTF-8" />
@@ -71,14 +72,8 @@ export function generateHtml() {
     <link rel="stylesheet" href="/runtime/entry/index.css" />
   </head>
   <body>
-    <header>
-      <div id="headerLeft">
-        <a
-          class="flex items-center text-#8b8685 hover:text-#ffffbb text-lg"
-          href="/"
-          >notes.dt.in.th</a
-        >
-      </div>
+    <header id="header">
+      <div id="headerLeft"><a href="/">notes.dt.in.th</a></div>
     </header>
     <div class="h-entry">
       <main id="main">
@@ -96,4 +91,73 @@ export function generateHtml() {
     <script type="module" src="/runtime/entry/index.js"></script>
   </body>
 </html>`;
+  if (precompiled) {
+    html = applyTemplate(html, precompiled);
+  }
+  return html;
+}
+
+export interface PrecompiledInput {
+  slug: string;
+  compiled: CompiledNote;
+}
+
+function applyTemplate(template: string, input: PrecompiledInput) {
+  const { compiled, slug } = input;
+  let html = template;
+
+  let dataAttributes = " data-precompiled=true";
+  for (const [key, value] of Object.entries(compiled.dataset)) {
+    dataAttributes += ` data-${key}="${escape(value)}"`;
+  }
+
+  html = html.replace(/<html/, () => `<html` + dataAttributes);
+  html = html.replace(
+    /<script id="head-placeholder"[^]*?<\/script>/,
+    () =>
+      `<title>${escape(processTitle(compiled.title))}</title>` +
+      generateHead(compiled.head) +
+      (!compiled.css || compiled.css === "/* No <style> tags present */"
+        ? ""
+        : `<style id="note-styles">${compiled.css}</style>`)
+  );
+  html = html.replace(
+    /<script id="js-placeholder"[^]*?<\/script>/,
+    () =>
+      `<script>
+window.precompiledNoteBehavior = function(require, exports, module, Vue) {${
+        compiled.js
+      }};
+window.precompiledFrontMatter = ${JSON.stringify(compiled.frontMatter).replace(
+        /</g,
+        "\\u003c"
+      )};
+</script>`
+  );
+  html = html.replace(
+    /<content-placeholder>([^]*?)<\/content-placeholder>/,
+    () => wrapHtml(compiled.html)
+  );
+  return html;
+}
+
+function generateHead(headElements: HeadElement[]): string {
+  return headElements
+    .map((element) => {
+      if (element.length === 2) {
+        const [tag, attributes] = element;
+        const attributeString = Object.entries(attributes)
+          .map(([key, value]) => `${key}="${escape(value)}"`)
+          .join(" ");
+        return `<${tag} ${attributeString} data-source="note">`;
+      } else if (element.length === 3) {
+        const [tag, attributes, content] = element;
+        const attributeString = Object.entries(attributes)
+          .map(([key, value]) => `${key}="${escape(value)}"`)
+          .join(" ");
+        return `<${tag} ${attributeString} data-source="note">${content}</${tag}>`;
+      }
+      return "";
+    })
+    .join("\n");
 }

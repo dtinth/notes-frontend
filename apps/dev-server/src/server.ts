@@ -11,15 +11,49 @@ fastify.register(fastifyStatic, {
   root: path.resolve(__dirname, "../../../packages/client/dist/runtime"),
   prefix: "/runtime/",
   decorateReply: false,
+  cacheControl: false,
 });
 
 fastify.register(fastifyStatic, {
   root: path.resolve(__dirname, "../../../packages/compiler/dist/compiler"),
   prefix: "/compiler/",
   decorateReply: false,
+  cacheControl: false,
 });
 
 fastify.get("*", async (request, reply) => {
+  const slug = request.url.match(/^\/([\w\-\/]*)/)?.[1] || "HomePage";
+  if ((request.query as { compile?: string }).compile) {
+    const url =
+      "https://htrqhjrmmqrqaccchyne.supabase.co/rest/v1/rpc/notes_get_contents?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imh0cnFoanJtbXFycWFjY2NoeW5lIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTkxOTk3NDIsImV4cCI6MTk3NDc3NTc0Mn0.VEdURpInV9dowpoMkHopAzpiBtNnRXDgO6hRfy1ZSHY";
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        input_search_key: slug.toLowerCase(),
+      }),
+    });
+    if (!response.ok) {
+      reply.code(500).send("Error fetching data");
+      console.error("Unable to fetch", await response.text());
+      return;
+    }
+    const data = (await response.json()) as { compiled: string }[];
+    if (!data || data.length === 0) {
+      reply.code(404).send("No content found");
+      return;
+    }
+    const precompiled = JSON.parse(data[0].compiled);
+    reply.type("text/html").send(
+      generateHtml({
+        compiled: precompiled,
+        slug,
+      })
+    );
+  }
+
   // Reply with HTML
   reply.type("text/html").send(generateHtml());
 });

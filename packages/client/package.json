@@ -9,15 +9,15 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.7",
-    "@tailwindcss/typography": "^0.5.13",
-    "@types/quicklink": "^2.3.4",
     "@fontsource/arimo": "^5.0.21",
-    "@notes/runtime": "workspace:*",
     "@notes/html-generator": "workspace:*",
+    "@notes/runtime": "workspace:*",
     "@supabase/supabase-js": "^2.45.3",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.1.12",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.18.0",
+    "@types/quicklink": "^2.3.4",
     "@vitejs/plugin-vue": "^6.0.1",
     "async-memoize-one": "^1.1.8",
     "buffer-es6": "^4.9.3",
@@ -28,6 +28,7 @@
     "quicklink": "^2.3.0",
     "stemmer": "^2.0.1",
     "stopwords": "^0.0.9",
+    "tailwindcss": "^4.1.12",
     "vite": "^7.1.4",
     "vitest": "^3.2.4",
     "vue": "^3.5.21"

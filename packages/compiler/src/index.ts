@@ -1,7 +1,7 @@
+import type { CompiledNote } from "@notes/types";
 import { createGenerator } from "@unocss/core";
 import presetUno from "@unocss/preset-uno";
 import type { File, Store } from "@vue/repl";
-// escape import moved to @notes/html-generator
 import * as Vue from "vue";
 import * as compiler from "vue/compiler-sfc";
 import * as VueServerRenderer from "vue/server-renderer";
@@ -19,33 +19,6 @@ export interface CompileMarkdownResult {
   debuggingInfo: DebuggingInfo;
   log: [time: number, message: string][];
 }
-
-export interface CompiledNote {
-  /** HTML of the rendered note */
-  html: string;
-
-  /** CSS of the rendered note */
-  css: string;
-
-  /** JavaScript code for the Vue component, compiled to CJS */
-  js: string;
-
-  /** Page title */
-  title: string;
-
-  /** data attributes to apply to the root element */
-  dataset: Record<string, string>;
-
-  /** Elements to add to the head of the page */
-  head: HeadElement[];
-
-  /** Front matter data */
-  frontMatter: Record<string, any>;
-}
-
-type HeadElement =
-  | [string, Record<string, string>]
-  | [string, Record<string, string>, string];
 
 export interface DebuggingInfo {
   vueTemplate?: string;
@@ -189,5 +162,3 @@ async function esmToCjs(
   log("transformed");
   return result.code;
 }
-
-// applyTemplate function moved to @notes/html-generator
