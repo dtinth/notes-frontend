@@ -9,6 +9,8 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "tailwindcss": "^3.4.7",
+    "@tailwindcss/typography": "^0.5.13",
     "@types/quicklink": "^2.3.4",
     "@fontsource/arimo": "^5.0.21",
     "@notes/runtime": "workspace:*",
