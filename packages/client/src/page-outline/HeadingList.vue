@@ -1,7 +1,7 @@
 <template>
-  <div class="text-#8b8685 font-semibold mb-2">On this page</div>
+  <div class="text-[#8b8685] font-semibold mb-2">On this page</div>
   <nav>
-    <ul class="space-y-2 text-sm">
+    <ul class="flex flex-col text-sm">
       <li 
         v-for="heading in headings" 
         :key="heading.id"
@@ -9,7 +9,7 @@
       >
         <a 
           :href="`#${heading.id}`" 
-          class="block hover:text-#ffffbb transition-colors py-1"
+          class="block hover:text-[#ffffbb] transition-colors py-1"
           @click="onHeadingClick(heading.id)"
         >
           {{ heading.text }}

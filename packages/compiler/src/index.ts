@@ -1,3 +1,4 @@
+import { executeCjs, registerComponents } from "@notes/runtime";
 import type { CompiledNote } from "@notes/types";
 import { createGenerator } from "@unocss/core";
 import presetUno from "@unocss/preset-uno";
@@ -5,9 +6,8 @@ import type { File, Store } from "@vue/repl";
 import * as Vue from "vue";
 import * as compiler from "vue/compiler-sfc";
 import * as VueServerRenderer from "vue/server-renderer";
-// Template logic moved to @notes/html-generator
-import { executeCjs, registerComponents } from "@notes/runtime";
 import { markdownToVue } from "./markdown";
+export type * from "@notes/types";
 
 const uno = createGenerator({
   presets: [presetUno({ preflight: false })],

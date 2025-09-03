@@ -1,7 +1,7 @@
 <template>
   <template v-if="headings.length >= 2">
     <div v-if="displayMode === 'desktop'"
-      class="page-outline-desktop fixed w-[190px] left-[calc(50%+var(--notes-content-width)/2+16px)] top-[106px] z-10">
+      class="page-outline-desktop fixed w-[190px] left-[calc(50%+var(--notes-content-width)/2+16px)] top-[106px] z-10 opacity-50 hover:opacity-100 transition-opacity duration-200">
       <HeadingList :headings="headings" @heading-click="scrollToHeading" />
     </div>
 
@@ -9,14 +9,14 @@
     <div v-if="displayMode === 'mobile'" class="page-outline-mobile">
       <!-- Tab that sticks to top after scrolling past navbar -->
       <button
-        class="page-outline-tab absolute top-0 right-4 bg-#353433 border border-t-0 border-#454443 px-3 py-1 rounded-b-md text-#8b8685 hover:text-#ffffbb z-10"
+        class="page-outline-tab absolute top-0 right-4 bg-[#353433] border border-t-0 border-[#454443] px-3 py-1 rounded-b-md text-[#8b8685] hover:text-[#ffffbb] z-10"
         @click.stop="isPopupOpen = !isPopupOpen">
         <span>On this page</span>
       </button>
       <div class="clear-both"></div>
 
       <!-- Popup content -->
-      <div v-if="isPopupOpen" class="absolute top-0 left-0 right-0 bg-#252423 border-b border-#454443 p-4 z-5 mt-0">
+      <div v-if="isPopupOpen" class="absolute top-0 left-0 right-0 bg-[#252423] border-b border-[#454443] p-4 z-5 mt-0">
         <HeadingList :headings="headings" @heading-click="(id) => scrollToHeading(id, true)" />
       </div>
     </div>

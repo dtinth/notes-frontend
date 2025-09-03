@@ -1,5 +1,6 @@
 import type { CompiledNote, HeadElement } from "@notes/types";
 import escape from "lodash-es/escape";
+export type * from "@notes/types";
 
 export function wrapHtml(html: string) {
   return `<div class="prose e-content" id="noteContents">${html}</div>`;

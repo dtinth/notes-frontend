@@ -46,14 +46,14 @@ class NoteFooter extends HTMLElement {
         <span>Respond on</span>
         ${discussions
           .map((discussion) => {
-            return `<a href="${discussion.url}" title="${discussion.title}" class="text-2xl flex hover:text-#ffffbb">
+            return `<a href="${discussion.url}" title="${discussion.title}" class="text-2xl flex hover:text-[#ffffbb]">
               <iconify-icon icon="${discussion.icon}"></iconify-icon>
             </a>`;
           })
           .join("")}
       </div>`;
     }
-    this.innerHTML = `<div class="text-#8b8685">${body}</div>`;
+    this.innerHTML = `<div class="text-[#8b8685]">${body}</div>`;
   }
 }
 

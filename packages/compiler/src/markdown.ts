@@ -55,9 +55,9 @@ export async function markdownToVue(
         },
         aside: function (directive) {
           if (directive.type !== "containerDirective") return false;
-          this.tag('<div slot="right">');
+          this.tag("<template v-slot:right>");
           if (directive.content) this.raw(directive.content);
-          this.tag("</div>");
+          this.tag("</template>");
           return true;
         },
         me: function (directive) {

@@ -44,6 +44,16 @@ export function hydrate(js: string | Function, target: string) {
 }
 
 export function registerComponents(app: Vue.App) {
-  void app;
-  // app.component()
+  app.component(
+    "d-split",
+    Vue.defineComponent({
+      setup(props, { slots }) {
+        return () =>
+          Vue.h("div", { class: "d-split" }, [
+            Vue.h("div", { class: "d-split__left" }, slots.default?.()),
+            Vue.h("div", { class: "d-split__right" }, slots.right?.()),
+          ]);
+      },
+    })
+  );
 }

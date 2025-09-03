@@ -48,6 +48,9 @@ importers:
       '@notes/runtime':
         specifier: workspace:*
         version: link:../runtime
+      '@notes/types':
+        specifier: workspace:*
+        version: link:../types
       '@supabase/supabase-js':
         specifier: ^2.45.3
         version: 2.57.0

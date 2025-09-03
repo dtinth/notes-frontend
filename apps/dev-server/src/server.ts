@@ -42,11 +42,10 @@ fastify.get("*", async (request, reply) => {
     }
     const data = (await response.json()) as { compiled: string }[];
     if (!data || data.length === 0) {
-      reply.code(404).send("No content found");
-      return;
+      return reply.code(404).send("No content found");
     }
     const precompiled = JSON.parse(data[0].compiled);
-    reply.type("text/html").send(
+    return reply.type("text/html").send(
       generateHtml({
         compiled: precompiled,
         slug,

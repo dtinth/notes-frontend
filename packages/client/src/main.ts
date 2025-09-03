@@ -12,13 +12,12 @@ import {
   processTitle,
   wrapHtml,
 } from "@notes/html-generator/src";
+import type { CompiledNote } from "@notes/types";
 import memoizeOne from "async-memoize-one";
 import "comic-mono/index.css";
 import "littlefoot/dist/littlefoot.css";
 import * as quicklink from "quicklink";
-import type { CompiledNote } from "../../compiler/src/index";
 import "../vendor/raster.grid.css";
-import "./custom-elements/d-split";
 import "./custom-elements/embed-container";
 import "./custom-elements/note-footer";
 import "./custom-elements/notes-bubble-author";
@@ -31,11 +30,32 @@ import { fetchPrivateNoteContents } from "./private-io";
 import "./style.css";
 
 function main() {
+  injectHeaderElements();
   addHeaderToolbar();
   checkScreenshotMode();
   enableQuickLink();
   addKeybinds();
   return runMain();
+}
+
+function injectHeaderElements() {
+  const header = document.getElementById("header") as HTMLDivElement;
+  if (!header) return;
+
+  if (!document.getElementById("headerMiddle")) {
+    const middle = document.createElement("div");
+    middle.className =
+      "flex-1 flex items-center text-[#8b8685] [&_a:hover]:text-[#ffffbb] overflow-hidden";
+    middle.id = "headerMiddle";
+    header.appendChild(middle);
+  }
+
+  if (!document.getElementById("headerToolbar")) {
+    const toolbar = document.createElement("div");
+    toolbar.className = "flex items-center px-[18px] flex-none gap-4";
+    toolbar.id = "headerToolbar";
+    header.appendChild(toolbar);
+  }
 }
 
 async function addHeaderToolbar() {
@@ -47,7 +67,7 @@ async function addHeaderToolbar() {
     body: '<path fill="currentColor" d="M15.25 0a8.25 8.25 0 0 0-6.18 13.72L1 22.88l1.12 1l8.05-9.12A8.251 8.251 0 1 0 15.25.01V0zm0 15a6.75 6.75 0 1 1 0-13.5a6.75 6.75 0 0 1 0 13.5z"/>',
   };
   const searchButton = document.createElement("button");
-  searchButton.className = "flex items-center text-#8b8685";
+  searchButton.className = "flex items-center text-[#8b8685]";
   searchButton.title = "Search";
   searchButton.id = "search-button";
   const searchPromise = import("./search");
