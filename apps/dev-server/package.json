@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
+  "private": true,
   "scripts": {
     "dev": "node --experimental-transform-types --watch src/server.ts"
   },
