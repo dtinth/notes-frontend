@@ -90,6 +90,7 @@ export function generateHtml(precompiled?: PrecompiledInput) {
     </div>
     <script id="js-placeholder" type="text/x-placeholder"></script>
     <script type="module" src="/runtime/entry/index.js"></script>
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "09ed5abf1cf7485c9af5d066baedf2a9"}'></script><!-- End Cloudflare Web Analytics -->
   </body>
 </html>`;
   if (precompiled) {
