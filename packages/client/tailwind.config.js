@@ -98,6 +98,18 @@ export default {
             "thead th": {
               color: "#8b8685",
             },
+            figure: {
+              textAlign: "center",
+            },
+            figcaption: {
+              marginTop: "0",
+            },
+            "figcaption a": {
+              color: "inherit",
+            },
+            "figure>p:has(img)+figcaption": {
+              marginTop: "-1rem",
+            },
           },
         },
       },

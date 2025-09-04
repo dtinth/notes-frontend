@@ -134,6 +134,22 @@ export async function markdownToVue(
           this.tag("</details>");
           return true;
         },
+        figure: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          let attrs = "";
+          if (directive.attributes?.class) {
+            attrs += ` class="${directive.attributes.class}"`;
+          }
+          this.tag("<figure" + attrs + ">");
+          if (directive.content) this.raw(directive.content);
+          if (directive.label) {
+            this.tag(`<figcaption>`);
+            this.raw(directive.label);
+            this.tag("</figcaption>");
+          }
+          this.tag("</figure>");
+          return true;
+        },
         "*": function (directive) {
           if (directive.content) {
             this.raw(directive.content);
