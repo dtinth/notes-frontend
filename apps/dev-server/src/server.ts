@@ -15,6 +15,13 @@ fastify.register(fastifyStatic, {
 });
 
 fastify.register(fastifyStatic, {
+  root: path.resolve(__dirname, "../../../packages/client/dist/static"),
+  prefix: "/static/",
+  decorateReply: false,
+  cacheControl: false,
+});
+
+fastify.register(fastifyStatic, {
   root: path.resolve(__dirname, "../../../packages/compiler/dist/compiler"),
   prefix: "/compiler/",
   decorateReply: false,

@@ -38,6 +38,9 @@ body {
 #footerContents {
   @apply mx-auto py-4 px-6 text-[#8b8685] text-right text-sm;
 }
+#footerContents a.u-author::before {
+  content: "—";
+}
 
 :root {
   --notes-content-width: 56rem;
@@ -90,7 +93,7 @@ body {
 
 /* Callouts */
 .notes-callout {
-  @apply rounded px-3 py-2 my-5 -mx-[13px] bg-[--callout-bg] border-[--callout-border] text-[--callout-text] border;
+  @apply rounded px-3 py-2 my-5 -mx-[13px] bg-[var(--callout-bg)] border-[var(--callout-border)] text-[var(--callout-text)] border;
   --callout-bg: #09080722;
   --callout-border: #656463;
   --callout-title: #d7fc70;
@@ -124,7 +127,7 @@ body {
   @apply mb-0;
 }
 .notes-callout__label {
-  @apply font-bold mb-0 text-[--callout-title];
+  @apply font-bold mb-0 text-[var(--callout-title)];
 }
 .notes-callout__label + p {
   @apply mt-0;

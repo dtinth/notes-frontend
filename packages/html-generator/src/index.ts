@@ -84,7 +84,7 @@ export function generateHtml(precompiled?: PrecompiledInput) {
       </main>
       <footer>
         <div id="footerContents">
-          <notes-page-footer></notes-page-footer>
+          <p><a class="u-author h-card" href="/" title="Thai Pangsakulyanont"><img src="/icon.png" alt="" style="display:none">@dtinth</a></p>
         </div>
       </footer>
     </div>

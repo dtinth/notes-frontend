@@ -1,5 +1,5 @@
+import { Tree } from "@notes/html-generator";
 import { ofetch } from "ofetch";
-import { Tree } from "../linker";
 
 export interface NotesGetContentsResult {
   source: string;

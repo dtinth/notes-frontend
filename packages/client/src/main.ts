@@ -195,9 +195,9 @@ async function runDynamicBreadcrumb(slug: string) {
   const tree = await fetchTree();
   const items = generateBreadcrumbItems(tree, slug);
   const html = generateBreadcrumbHtml(items);
-  const placeholder = document.querySelector("breadcrumb-placeholder");
-  if (placeholder) {
-    placeholder.outerHTML = html;
+  const headerMiddle = document.querySelector("#headerMiddle");
+  if (headerMiddle) {
+    headerMiddle.innerHTML = html;
   }
 }
 
@@ -280,7 +280,6 @@ async function runPrecompiled(
 }
 
 async function handleFrontMatter(frontMatter: Record<string, any>) {
-  console.log("Front matter:", frontMatter);
   const mainContents = document.querySelector<HTMLDivElement>("#mainContents");
   const footer = document.createElement("note-footer");
   footer.setAttribute("front-matter", JSON.stringify(frontMatter));
