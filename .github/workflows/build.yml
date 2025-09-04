@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - nx
 permissions:
   contents: write
 jobs:
@@ -11,24 +12,44 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-        name: Install pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
       - name: Install Node.js
         uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
       - name: Install dependencies
         run: corepack enable && pnpm install
       - name: Build
         run: pnpm run build
       - name: Package
-        run: pnpm version 0.0.$(date +'%y%m%d%H%M%S') --no-git-tag-version && pnpm pack
+        run: |
+          set -x
+          mkdir -p tmp/packages
+          version=0.0.$(date +'%y%m%d%H%M%S')-nx
+          echo $version | tee tmp/version.txt
+          for dir in packages/{client,compiler,html-generator}; do
+            (cd "$dir" && \
+              jq --arg version "$version" '.version = $version' package.json > package.json.tmp && mv package.json.tmp package.json && \
+              pnpm pack --pack-destination "../../tmp/packages" --pack-gzip-level 9)
+          done
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: package
-          path: "*.tgz"
+          path: "tmp/packages/*.tgz"
       - name: Create release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          version="$(node -p "require('./package.json').version")"
-          gh release create "v$version" --title "v$version" --notes "Automated release for version $version" *.tgz
+          version="$(cat tmp/version.txt)"
+          sed "s/VERSION/$version/g" <<'EOF' | tee tmp/release-notes.md
+          ```json
+          {
+            "@notes/client": "https://github.com/dtinth/notes-frontend/releases/download/vVERSION/notes-client-VERSION.tgz",
+            "@notes/compiler": "https://github.com/dtinth/notes-frontend/releases/download/vVERSION/notes-compiler-VERSION.tgz",
+            "@notes/html-generator": "https://github.com/dtinth/notes-frontend/releases/download/vVERSION/notes-html-generator-VERSION.tgz"
+          }
+          ```
+          EOF
+          gh release create "v$version" --title "v$version" --notes-file tmp/release-notes.md tmp/packages/*.tgz

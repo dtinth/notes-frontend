@@ -1,0 +1,46 @@
+{
+  "name": "@notes/compiler",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "smoke": "node smoke.js"
+  },
+  "devDependencies": {
+    "@notes/runtime": "workspace:*",
+    "@notes/types": "workspace:*",
+    "@shikijs/rehype": "^1.14.1",
+    "@unocss/core": "^0.62.1",
+    "@unocss/preset-uno": "^0.62.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/compiler-sfc": "^3.5.21",
+    "@vue/repl": "^4.3.1",
+    "async-memoize-one": "^1.1.8",
+    "gray-matter": "^4.0.3",
+    "micromark": "^4.0.0",
+    "micromark-extension-directive": "^3.0.1",
+    "micromark-extension-gfm-footnote": "^2.1.0",
+    "micromark-extension-gfm-strikethrough": "^2.1.0",
+    "micromark-extension-gfm-table": "^2.1.0",
+    "rehype": "^13.0.1",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-slug": "^6.0.0",
+    "rehype-vue-sfc": "^0.0.0",
+    "shiki": "^1.14.1",
+    "sucrase": "^3.35.0",
+    "vite": "^7.1.4",
+    "vite-plugin-dts": "^4.5.4",
+    "vitest": "^3.2.4",
+    "vue": "^3.5.21"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "dependencies": {
+    "rehype-remove-comments": "^6.1.1"
+  }
+}

@@ -1,0 +1,71 @@
+import { expect, test } from "vitest";
+import { compileMarkdown } from "./index";
+
+const FIXTURE1 = `---
+x:
+  y:
+    z: 99
+---
+# hello
+
+this is some text
+
+\`\`\`js
+const x = "hello"
+\`\`\`
+
+[link {{x}}](link)
+
+<script setup>
+import { ref } from 'vue';
+const x = ref(1);
+</script>
+
+<style scoped>a { color: green }</style>
+
+## section 1
+
+<span class="bg-red-400">nice</span>
+
+## section 2
+
+very nice
+`;
+
+test("pre-renders the Vue component", async () => {
+  const result = await compileMarkdown(FIXTURE1, "Slug");
+  expect(result.errors).toEqual([]);
+  expect(result.compiled.html).toContain("link 1");
+});
+
+test("supports scoped styles", async () => {
+  const { compiled } = await compileMarkdown(FIXTURE1, "Slug");
+  expect(compiled.css).toContain("a[data-v");
+});
+
+test("supports frontmatter", async () => {
+  const result = await compileMarkdown(FIXTURE1, "Slug");
+  expect(result.errors).toEqual([]);
+  expect(result.compiled.frontMatter.x.y.z).toEqual(99);
+});
+
+test("renders syntax highlighting", async () => {
+  const { compiled } = await compileMarkdown(FIXTURE1, "Slug");
+  expect(compiled.html).toContain("shiki");
+});
+
+test("supports tailwind css classes", async () => {
+  const { compiled } = await compileMarkdown(FIXTURE1, "Slug");
+  expect(compiled.css).toContain(".bg-red-400");
+});
+
+test("renders lead", async () => {
+  const markdown = `
+:::lead
+OK
+:::
+`;
+  const { compiled } = await compileMarkdown(markdown, "Slug");
+  expect(compiled.html).toContain("lead");
+  expect(compiled.html).toContain("OK");
+});

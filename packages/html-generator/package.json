@@ -1,0 +1,22 @@
+{
+  "name": "@notes/html-generator",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  },
+  "devDependencies": {
+    "@notes/types": "workspace:*",
+    "@types/lodash-es": "^4.17.12",
+    "vite": "^7.1.4",
+    "vite-plugin-dts": "^4.5.4"
+  }
+}
