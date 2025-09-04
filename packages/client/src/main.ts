@@ -166,7 +166,9 @@ async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
   } = await fetchContents();
   if (
     location.pathname !== `/${slug}` &&
-    (location.pathname === `/${searchKey}` || location.pathname === `/`)
+    (location.pathname === `/${searchKey}` ||
+      location.pathname === `/${searchKey}.html` ||
+      location.pathname === `/`)
   ) {
     history.replaceState({}, "", `/${slug}`);
   }
@@ -214,7 +216,7 @@ async function runMain() {
     );
   } else {
     const pathname = location.pathname;
-    const match = pathname.match(/^\/(private\/)?([A-Za-z0-9]+)$/);
+    const match = pathname.match(/^\/(private\/)?([A-Za-z0-9-]+)(?:\.html)?$/);
     if (match) {
       await runDynamic(match[2], { isPrivate: !!match[1] });
     } else {
