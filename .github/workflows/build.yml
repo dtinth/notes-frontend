@@ -29,7 +29,9 @@ jobs:
           version=0.0.$(date +'%y%m%d%H%M%S')-nx
           echo $version | tee tmp/version.txt
           for dir in packages/{client,compiler,html-generator}; do
-            (cd "$dir" && pnpm version "$version" --no-git-tag-version && pnpm pack --pack-destination "../../tmp/packages")
+            (cd "$dir" && \
+              jq --arg version "$version" '.version = $version' package.json > package.json.tmp && mv package.json.tmp package.json && \
+              pnpm pack --pack-destination "../../tmp/packages")
           done
       - name: Upload artifact
         uses: actions/upload-artifact@v4
