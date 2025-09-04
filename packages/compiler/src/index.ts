@@ -11,6 +11,16 @@ export type * from "@notes/types";
 
 const uno = createGenerator({
   presets: [presetUno({ preflight: false })],
+  extendTheme: (theme) => {
+    theme.fontFamily ??= {};
+    theme.fontFamily.sans = [
+      "Arimo",
+      "Helvetica",
+      "Arial",
+      theme.fontFamily.sans,
+    ].join(", ");
+    theme.fontFamily.mono = ["Comic Mono", theme.fontFamily.mono].join(", ");
+  },
 });
 
 export interface CompileMarkdownResult {
