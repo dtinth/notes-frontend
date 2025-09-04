@@ -6,6 +6,7 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   plugins: [vue(), tailwindcss() as any],
   build: {
+    sourcemap: true,
     rollupOptions: {
       output: {
         entryFileNames: `runtime/entry/[name].js`,

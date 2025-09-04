@@ -16,6 +16,7 @@
   "devDependencies": {
     "@notes/types": "workspace:*",
     "@types/lodash-es": "^4.17.12",
-    "vite": "^7.1.4"
+    "vite": "^7.1.4",
+    "vite-plugin-dts": "^4.5.4"
   }
 }

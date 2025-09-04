@@ -1,6 +1,7 @@
 import vue from "@vitejs/plugin-vue";
 import path from "path";
 import { fileURLToPath } from "url";
+import dts from "vite-plugin-dts";
 import { defineConfig } from "vitest/config";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -8,7 +9,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://vitejs.dev/config/
 export default defineConfig({
   publicDir: false,
-  plugins: [vue()],
+  plugins: [vue(), dts() as any],
   resolve: {
     conditions: ["worker"],
     alias: [
@@ -21,6 +22,7 @@ export default defineConfig({
   },
   build: {
     outDir: path.resolve(__dirname, "dist/compiler"),
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),
       formats: ["es"],
