@@ -24,6 +24,7 @@ jobs:
         run: pnpm run build
       - name: Package
         run: |
+          set -x
           mkdir -p tmp/packages
           version=0.0.$(date +'%y%m%d%H%M%S')-nx
           echo $version | tee tmp/version.txt

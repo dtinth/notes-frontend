@@ -8,6 +8,7 @@
     "test": "vitest run",
     "test:watch": "vitest"
   },
+  "dependencies": {},
   "devDependencies": {
     "@fontsource/arimo": "^5.0.21",
     "@notes/html-generator": "workspace:*",
