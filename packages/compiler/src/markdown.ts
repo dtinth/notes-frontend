@@ -108,6 +108,13 @@ export async function markdownToVue(
           );
           return true;
         },
+        tweet: function (directive) {
+          if (directive.type !== "containerDirective") return false;
+          this.tag('<blockquote class="twitter-tweet">');
+          if (directive.content) this.raw(directive.content);
+          this.tag("</blockquote>");
+          return true;
+        },
         cta: function (directive) {
           if (directive.type !== "leafDirective") return false;
           this.tag('<p class="notes-cta">');

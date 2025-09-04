@@ -216,7 +216,9 @@ async function runMain() {
     );
   } else {
     const pathname = location.pathname;
-    const match = pathname.match(/^\/(private\/)?([A-Za-z0-9-]+)(?:\.html)?$/);
+    const match = pathname.match(
+      /^\/(private\/)?([A-Za-z0-9\.\-]+)(?:\.html)?$/
+    );
     if (match) {
       await runDynamic(match[2], { isPrivate: !!match[1] });
     } else {
