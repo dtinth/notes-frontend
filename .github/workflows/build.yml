@@ -52,4 +52,4 @@ jobs:
           }
           ```
           EOF
-          gh release create "v$version" --title "v$version" --notes "Automated release for version $version" tmp/packages/*.tgz
+          gh release create "v$version" --title "v$version" --notes-file tmp/release-notes.md tmp/packages/*.tgz
