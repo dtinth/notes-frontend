@@ -22,6 +22,7 @@ import "./custom-elements/embed-container";
 import "./custom-elements/note-footer";
 import "./custom-elements/notes-bubble-author";
 import "./custom-elements/notes-page-footer";
+import "./custom-elements/soundcloud-embed";
 import "./custom-elements/youtube-embed";
 import { flashMessage } from "./flash-message";
 import { fetchPublicNoteContents, fetchTree } from "./io";

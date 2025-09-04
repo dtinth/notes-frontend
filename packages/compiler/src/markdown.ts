@@ -14,6 +14,7 @@ import {
 import { gfmTable, gfmTableHtml } from "micromark-extension-gfm-table";
 import { rehype } from "rehype";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeRemoveComments from "rehype-remove-comments";
 import rehypeSlug from "rehype-slug";
 import rehypeVueSFC from "rehype-vue-sfc";
 import { getHighlighter } from "./shiki";
@@ -100,6 +101,13 @@ export async function markdownToVue(
           );
           return true;
         },
+        soundcloud: function (directive) {
+          if (directive.type !== "leafDirective") return false;
+          this.tag(
+            `<soundcloud-embed track-id="${directive.label}"></soundcloud-embed>`
+          );
+          return true;
+        },
         cta: function (directive) {
           if (directive.type !== "leafDirective") return false;
           this.tag('<p class="notes-cta">');
@@ -163,6 +171,7 @@ export async function markdownToVue(
 
   const processor = rehype()
     .data("settings", { fragment: true })
+    .use(rehypeRemoveComments)
     .use(rehypeSlug)
     .use(rehypeAutolinkHeadings)
     .use(rehypeShikiFromHighlighter, (await getHighlighter()) as any, {

@@ -39,5 +39,8 @@
   "files": [
     "dist",
     "src"
-  ]
+  ],
+  "dependencies": {
+    "rehype-remove-comments": "^6.1.1"
+  }
 }
