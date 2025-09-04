@@ -26,7 +26,7 @@ jobs:
         run: |
           set -x
           mkdir -p tmp/packages
-          version=0.0.$(date +'%y%m%d%H%M%S')-nx
+          version=0.0.$(date +'%y%m%d%H%M%S')
           echo $version | tee tmp/version.txt
           for dir in packages/{client,compiler,html-generator}; do
             (cd "$dir" && \
