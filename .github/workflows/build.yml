@@ -1,0 +1,43 @@
+name: Build
+on:
+  push:
+    branches:
+      - main
+      - nx
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: corepack enable && pnpm install
+      - name: Build
+        run: pnpm run build
+      - name: Package
+        run: |
+          mkdir -p tmp/packages
+          version=0.0.$(date +'%y%m%d%H%M%S')-nx
+          echo $version | tee tmp/version.txt
+          for dir in packages/{client,compiler,html-generator}; do
+            (cd "$dir" && pnpm version "$version" --no-git-tag-version && pnpm pack --pack-destination "../../tmp/packages")
+          done
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: package
+          path: "tmp/packages/*.tgz"
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version="$(cat tmp/version.txt)"
+          gh release create "v$version" --title "v$version" --notes "Automated release for version $version" tmp/packages/*.tgz

@@ -11,5 +11,8 @@
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.18.0",
     "nx": "21.4.1"
+  },
+  "scripts": {
+    "build": "nx run-many -t build"
   }
 }

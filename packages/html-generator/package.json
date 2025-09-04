@@ -8,8 +8,7 @@
     "build": "vite build",
     "dev": "vite build --watch",
     "test": "vitest run",
-    "test:watch": "vitest",
-    "smoke": "node smoke.js"
+    "test:watch": "vitest"
   },
   "dependencies": {
     "lodash-es": "^4.17.21"
