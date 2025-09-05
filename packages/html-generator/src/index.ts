@@ -109,6 +109,7 @@ function applyTemplate(template: string, input: PrecompiledInput) {
   let html = template;
 
   let dataAttributes = " data-precompiled=true";
+  dataAttributes += ` data-slug="${escape(slug)}"`;
   for (const [key, value] of Object.entries(compiled.dataset)) {
     dataAttributes += ` data-${key}="${escape(value)}"`;
   }

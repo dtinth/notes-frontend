@@ -164,14 +164,7 @@ async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
     compiled_source_version,
     source_version,
   } = await fetchContents();
-  if (
-    location.pathname !== `/${slug}` &&
-    (location.pathname === `/${searchKey}` ||
-      location.pathname === `/${searchKey}.html` ||
-      location.pathname === `/`)
-  ) {
-    history.replaceState({}, "", `/${slug}`);
-  }
+  normalizeLocation(searchKey, slug);
   runDynamicBreadcrumb(slug);
   flashMessage("Loading compiler...");
   const params = new URLSearchParams(location.search);
@@ -209,16 +202,18 @@ async function runMain() {
     precompiledNoteBehavior?: Function;
     precompiledFrontMatter?: Record<string, any>;
   };
+  const pathname = location.pathname;
+  const match = pathname.match(
+    /^\/(private\/)?([A-Za-z0-9\.\-]+?)(?:\.html)?$/
+  );
   if (precompilation.precompiledNoteBehavior) {
     await runPrecompiled(
       precompilation.precompiledNoteBehavior,
-      precompilation.precompiledFrontMatter || {}
+      precompilation.precompiledFrontMatter || {},
+      match?.[2] || "",
+      document.documentElement.dataset.slug || ""
     );
   } else {
-    const pathname = location.pathname;
-    const match = pathname.match(
-      /^\/(private\/)?([A-Za-z0-9\.\-]+)(?:\.html)?$/
-    );
     if (match) {
       await runDynamic(match[2], { isPrivate: !!match[1] });
     } else {
@@ -272,8 +267,12 @@ async function runCompiled(compiled: CompiledNote) {
 
 async function runPrecompiled(
   precompiledNoteBehavior: Function,
-  frontMatter: Record<string, any>
+  frontMatter: Record<string, any>,
+  searchKey: string,
+  slug: string
 ) {
+  normalizeLocation(searchKey, slug);
+  runDynamicBreadcrumb(slug);
   handleFrontMatter(frontMatter);
 
   // Initialize the page outline
@@ -289,6 +288,17 @@ async function handleFrontMatter(frontMatter: Record<string, any>) {
   const footer = document.createElement("note-footer");
   footer.setAttribute("front-matter", JSON.stringify(frontMatter));
   mainContents?.appendChild(footer);
+}
+
+function normalizeLocation(searchKey: string, slug: string) {
+  if (
+    location.pathname !== `/${slug}` &&
+    (location.pathname === `/${searchKey}` ||
+      location.pathname === `/${searchKey}.html` ||
+      location.pathname === `/`)
+  ) {
+    history.replaceState({}, "", `/${slug}`);
+  }
 }
 
 main();

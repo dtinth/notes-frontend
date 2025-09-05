@@ -47,7 +47,7 @@ fastify.get("*", async (request, reply) => {
       console.error("Unable to fetch", await response.text());
       return;
     }
-    const data = (await response.json()) as { compiled: string }[];
+    const data = (await response.json()) as { compiled: string; id: string }[];
     if (!data || data.length === 0) {
       return reply.code(404).send("No content found");
     }
@@ -55,7 +55,7 @@ fastify.get("*", async (request, reply) => {
     return reply.type("text/html").send(
       generateHtml({
         compiled: precompiled,
-        slug,
+        slug: data[0].id,
       })
     );
   }
