@@ -107,6 +107,9 @@ export default {
             "figcaption a": {
               color: "inherit",
             },
+            "figcaption strong": {
+              color: "inherit",
+            },
             "figure>p:has(img)+figcaption": {
               marginTop: "-1rem",
             },
