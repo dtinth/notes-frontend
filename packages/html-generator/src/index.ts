@@ -7,10 +7,10 @@ export function wrapHtml(html: string) {
 }
 
 export function processTitle(title: string) {
-  if (title === "notes.dt.in.th") {
+  if (title === "dt.in.th") {
     return title;
   } else {
-    return `${title} | notes.dt.in.th`;
+    return `${title} | dt.in.th`;
   }
 }
 
@@ -74,7 +74,7 @@ export function generateHtml(precompiled?: PrecompiledInput) {
   </head>
   <body>
     <header id="header">
-      <div id="headerLeft"><a href="/">notes.dt.in.th</a></div>
+      <div id="headerLeft"><a href="/">dt.in.th</a></div>
     </header>
     <div class="h-entry">
       <main id="main">

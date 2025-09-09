@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 test("homepage", async ({ page }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/notes\.dt\.in\.th/);
-  await expect(page.locator("h1")).toContainText("notes.dt.in.th");
+  await expect(page).toHaveTitle(/dt\.in\.th/);
+  await expect(page.locator("h1")).toContainText("dt.in.th");
 
   // IndieWeb tags
   await expect(page.locator(".h-entry .e-content")).toContainText(
@@ -14,7 +14,7 @@ test("homepage", async ({ page }) => {
 
 test("recent page", async ({ page }) => {
   await page.goto("/Recent");
-  await expect(page).toHaveTitle("Recent writings | notes.dt.in.th");
+  await expect(page).toHaveTitle("Recent writings | dt.in.th");
 });
 
 test("meta tags and redirects", async ({ page }) => {
