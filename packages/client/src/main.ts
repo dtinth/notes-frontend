@@ -202,9 +202,13 @@ async function runMain() {
     precompiledNoteBehavior?: Function;
     precompiledFrontMatter?: Record<string, any>;
   };
-  const pathname = location.pathname;
+  let pathname = location.pathname;
+  const isPrecompiled = precompilation.precompiledNoteBehavior;
+  if (!isPrecompiled) {
+    pathname = mapLegacyPathname(pathname);
+  }
   const match = pathname.match(
-    /^\/(private\/)?([A-Za-z0-9\.\-]+?)(?:\.html)?$/
+    /^\/(private\/)?([A-Za-z0-9\.\-]+?)(?:\.html|\/|\/index\.html)?$/
   );
   if (precompilation.precompiledNoteBehavior) {
     await runPrecompiled(
@@ -214,12 +218,40 @@ async function runMain() {
       document.documentElement.dataset.slug || ""
     );
   } else {
-    if (match) {
+    if (location.pathname.startsWith("/go/")) {
+      location.replace(
+        "https://302.dt.in.th" +
+          location.pathname.replace("/go", "") +
+          location.search +
+          location.hash
+      );
+    } else if (match) {
       await runDynamic(match[2], { isPrivate: !!match[1] });
     } else {
       await runDynamic("HomePage", { isPrivate: false });
     }
   }
+}
+
+function mapLegacyPathname(pathname: string) {
+  const legacyMap: Record<string, string> = {
+    "/talks/reactbkk2-live-coding": "/reactbkk2-live-coding",
+    "/talks/smells-in-react-apps": "/smells-in-react-apps",
+    "/talks/tdd": "/tdd-talk",
+    "/talks/hoc": "/higher-order-components-and-recompose-talk",
+    "/talks/web-midi-instruments-lightning-talk":
+      "/web-midi-instruments-lightning-talk",
+    "/music/over-whelming-joy": "/over-whelming-joy",
+    "/music/only-love-remix": "/only-love-remix",
+    "/music/bursting-music-star": "/bursting-music-star",
+    "/music/running-out-2015": "/running-out-2015",
+    "/music/everyday-evermore": "/everyday-evermore",
+    "/music/just-look-at-my-eyes-bms": "/just-look-at-my-eyes-bms",
+    "/music/422": "/422",
+    "/talks/recursion": "/introduction-to-recursion-python",
+    "/talks/taskworld-react": "/taskworld-react-talk",
+  };
+  return legacyMap[pathname.replace(/\/(?:index\.html)?$/, "")] || pathname;
 }
 
 async function runCompiled(compiled: CompiledNote) {
@@ -291,11 +323,15 @@ async function handleFrontMatter(frontMatter: Record<string, any>) {
 }
 
 function normalizeLocation(searchKey: string, slug: string) {
+  const currentPathname = mapLegacyPathname(location.pathname);
   if (
     location.pathname !== `/${slug}` &&
-    (location.pathname === `/${searchKey}` ||
-      location.pathname === `/${searchKey}.html` ||
-      location.pathname === `/`)
+    (currentPathname === `/${searchKey}` ||
+      currentPathname === `/${searchKey}.html` ||
+      currentPathname === `/${searchKey}/` ||
+      currentPathname === `/${searchKey}/index.html` ||
+      currentPathname === `/` ||
+      location.pathname !== currentPathname)
   ) {
     history.replaceState({}, "", `/${slug}`);
   }
