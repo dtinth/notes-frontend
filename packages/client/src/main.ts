@@ -17,7 +17,6 @@ import memoizeOne from "async-memoize-one";
 import "comic-mono/index.css";
 import "littlefoot/dist/littlefoot.css";
 import * as quicklink from "quicklink";
-import "../vendor/raster.grid.css";
 import "./custom-elements/embed-container";
 import "./custom-elements/note-footer";
 import "./custom-elements/notes-bubble-author";
