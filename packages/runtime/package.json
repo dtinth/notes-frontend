@@ -9,8 +9,6 @@
   "devDependencies": {
     "vue": "^3.4.38"
   },
-  "dependencies": {
-    "littlefoot": "^4.1.2"
-  },
+  "dependencies": {},
   "scripts": {}
 }

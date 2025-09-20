@@ -263,3 +263,8 @@ h6:target {
 .twitter-tweet a:hover {
   text-decoration: underline;
 }
+
+.medium-zoom-overlay,
+.medium-zoom-image--opened {
+  z-index: 11;
+}

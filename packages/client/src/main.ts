@@ -25,6 +25,7 @@ import "./custom-elements/soundcloud-embed";
 import "./custom-elements/youtube-embed";
 import { flashMessage } from "./flash-message";
 import { fetchPublicNoteContents, fetchTree } from "./io";
+import { onHydrated } from "./onHydrated";
 import { destroyPageOutline, initPageOutline } from "./page-outline";
 import { fetchPrivateNoteContents } from "./private-io";
 import "./style.css";
@@ -293,7 +294,7 @@ async function runCompiled(compiled: CompiledNote) {
   initPageOutline();
 
   const { hydrate } = await import("@notes/runtime");
-  hydrate(compiled.js, "#noteContents");
+  hydrate(compiled.js, "#noteContents").then(onHydrated);
 }
 
 async function runPrecompiled(
@@ -311,7 +312,7 @@ async function runPrecompiled(
   initPageOutline();
 
   const { hydrate } = await import("@notes/runtime");
-  hydrate(precompiledNoteBehavior, "#noteContents");
+  hydrate(precompiledNoteBehavior, "#noteContents").then(onHydrated);
 }
 
 async function handleFrontMatter(frontMatter: Record<string, any>) {
