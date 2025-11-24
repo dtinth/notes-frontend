@@ -61,6 +61,12 @@ body {
   @apply block w-full px-3 py-2 bg-gradient-to-b from-[#151413] to-[#292827] text-[#e9e8e7] placeholder-[#8b8685] border border-[#656463] rounded-lg shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d7fc70] transition duration-300 hover:duration-0 ease-out;
 }
 
+.btn:disabled,
+.form-control:disabled,
+.disabled {
+  @apply opacity-50 cursor-not-allowed pointer-events-none;
+}
+
 /* Footnotes */
 [data-dtinth] .littlefoot {
   --button-background-color: transparent;
