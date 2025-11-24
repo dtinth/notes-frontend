@@ -99,7 +99,7 @@ body {
 
 /* Callouts */
 .notes-callout {
-  @apply rounded px-3 py-2 my-5 -mx-[13px] bg-[var(--callout-bg)] border-[var(--callout-border)] text-[var(--callout-text)] border;
+  @apply rounded px-3 py-2 my-5 bg-[var(--callout-bg)] border-[var(--callout-border)] text-[var(--callout-text)] border;
   --callout-bg: #09080722;
   --callout-border: #656463;
   --callout-title: #d7fc70;
