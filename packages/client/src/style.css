@@ -274,3 +274,55 @@ h6:target {
 .medium-zoom-image--opened {
   z-index: 11;
 }
+
+/* Code block copy button */
+.code-copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 4px;
+  background: #252423;
+  border: 1px solid #454443;
+  border-radius: 6px;
+  color: #8b8685;
+  cursor: pointer;
+  transition: all 200ms ease-out;
+  opacity: 0;
+}
+
+pre:hover .code-copy-button,
+.code-copy-button:focus-visible,
+.code-copy-button:hover {
+  opacity: 1;
+}
+
+.code-copy-button:hover {
+  background: #353433;
+  border-color: #8b8685;
+  color: #8b8685;
+}
+
+.code-copy-button:focus-visible {
+  outline: 2px solid #d7fc70;
+  outline-offset: 2px;
+}
+
+.code-copy-button:active {
+  background: #090807;
+}
+
+.code-copy-button.copied {
+  background: #2a6b2a;
+  border-color: #4ade80;
+  color: #4ade80;
+}
+
+.code-copy-button svg {
+  width: 16px;
+  height: 16px;
+}
