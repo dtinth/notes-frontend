@@ -86,7 +86,16 @@ export async function compileMarkdown(
     const repl = await import("@vue/repl");
     log("vue compiler imported");
 
-    const store = { compiler, sfcOptions: {} } as unknown as Store;
+    const store = {
+      compiler,
+      sfcOptions: {
+        template: {
+          compilerOptions: {
+            isCustomElement: (tag: string) => tag.includes("-"),
+          },
+        },
+      },
+    } as unknown as Store;
     const file = {
       filename: "Note.vue",
       code: vueTemplate,

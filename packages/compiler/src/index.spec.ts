@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { compileMarkdown } from "./index";
+import { compileMarkdown } from "./../dist/compiler/index";
 
 const FIXTURE1 = `---
 x:
@@ -68,4 +68,10 @@ OK
   const { compiled } = await compileMarkdown(markdown, "Slug");
   expect(compiled.html).toContain("lead");
   expect(compiled.html).toContain("OK");
+});
+
+test("renders custom elements", async () => {
+  const markdown = `hello <custom-element></custom-element>`;
+  const { compiled } = await compileMarkdown(markdown, "Slug");
+  expect(compiled.html).toContain("<custom-element>");
 });

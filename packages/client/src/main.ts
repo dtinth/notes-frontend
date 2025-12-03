@@ -175,7 +175,7 @@ async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
     !params.get("recompile")
   ) {
     flashMessage("Running...");
-    await runCompiled(JSON.parse(compiled));
+    await runCompiled(JSON.parse(compiled), slug);
     flashMessage("");
     return;
   }
@@ -184,7 +184,7 @@ async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
   flashMessage("Compiling...");
   const result = await compileMarkdown(contents, slug);
   flashMessage("Running...");
-  await runCompiled(result.compiled);
+  await runCompiled(result.compiled, slug);
   flashMessage("");
 }
 
@@ -255,7 +255,7 @@ function mapLegacyPathname(pathname: string) {
   return legacyMap[pathname.replace(/\/(?:index\.html)?$/, "")] || pathname;
 }
 
-async function runCompiled(compiled: CompiledNote) {
+async function runCompiled(compiled: CompiledNote, slug: string) {
   document.querySelector("#mainContents")!.innerHTML = wrapHtml(compiled.html);
 
   const noteStyles = document.querySelector("#note-styles");
@@ -288,7 +288,7 @@ async function runCompiled(compiled: CompiledNote) {
     'This note has been dynamically compiled. To inspect the compiled code, open the console and type "compiled".'
   );
   Object.assign(window, { compiled });
-  handleFrontMatter(compiled.frontMatter);
+  handleFrontMatter(compiled.frontMatter, slug);
 
   // Initialize the page outline
   destroyPageOutline(); // Clean up any existing outline
@@ -306,7 +306,7 @@ async function runPrecompiled(
 ) {
   normalizeLocation(searchKey, slug);
   runDynamicBreadcrumb(slug);
-  handleFrontMatter(frontMatter);
+  handleFrontMatter(frontMatter, slug);
 
   // Initialize the page outline
   destroyPageOutline(); // Clean up any existing outline
@@ -316,10 +316,14 @@ async function runPrecompiled(
   hydrate(precompiledNoteBehavior, "#noteContents").then(onHydrated);
 }
 
-async function handleFrontMatter(frontMatter: Record<string, any>) {
+async function handleFrontMatter(
+  frontMatter: Record<string, any>,
+  slug: string
+) {
   const mainContents = document.querySelector<HTMLDivElement>("#mainContents");
   const footer = document.createElement("note-footer");
   footer.setAttribute("front-matter", JSON.stringify(frontMatter));
+  footer.setAttribute("slug", slug);
   mainContents?.appendChild(footer);
 }
 
