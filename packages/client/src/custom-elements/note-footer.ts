@@ -25,11 +25,11 @@ class NoteFooter extends HTMLElement {
   };
 
   get shouldUseGiscus() {
-    if (this.frontMatter.topic) {
-      return !!this.frontMatter.giscus;
-    } else {
-      return this.frontMatter.giscus !== false;
-    }
+    // if (this.frontMatter.topic) {
+    return !!this.frontMatter.giscus;
+    // } else {
+    //   return this.frontMatter.giscus !== false;
+    // }
   }
 
   connectedCallback() {
