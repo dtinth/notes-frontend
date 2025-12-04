@@ -41,6 +41,13 @@ body {
 #footerContents a.u-author::before {
   content: "—";
 }
+#footerContents > p:first-child {
+  @apply float-right;
+}
+#footerContents::after {
+  @apply block clear-both;
+  content: "";
+}
 
 :root {
   --notes-content-width: 56rem;

@@ -320,11 +320,12 @@ async function handleFrontMatter(
   frontMatter: Record<string, any>,
   slug: string
 ) {
-  const mainContents = document.querySelector<HTMLDivElement>("#mainContents");
+  const footerContents =
+    document.querySelector<HTMLDivElement>("#footerContents");
   const footer = document.createElement("note-footer");
   footer.setAttribute("front-matter", JSON.stringify(frontMatter));
   footer.setAttribute("slug", slug);
-  mainContents?.appendChild(footer);
+  footerContents?.appendChild(footer);
 }
 
 function normalizeLocation(searchKey: string, slug: string) {
