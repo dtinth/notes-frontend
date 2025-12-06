@@ -29,6 +29,7 @@ import { fetchPublicNoteContents, fetchTree } from "./io";
 import { onHydrated } from "./onHydrated";
 import { destroyPageOutline, initPageOutline } from "./page-outline";
 import { fetchPrivateNoteContents } from "./private-io";
+import { NoteRuntimeContext } from "./types";
 import "./style.css";
 
 function main() {
@@ -288,14 +289,18 @@ async function runCompiled(compiled: CompiledNote, slug: string) {
     'This note has been dynamically compiled. To inspect the compiled code, open the console and type "compiled".'
   );
   Object.assign(window, { compiled });
-  handleFrontMatter(compiled.frontMatter, slug);
+  const runtimeContext: NoteRuntimeContext = {
+    slug,
+    frontMatter: compiled.frontMatter,
+  };
+  handleFrontMatter(runtimeContext);
 
   // Initialize the page outline
   destroyPageOutline(); // Clean up any existing outline
   initPageOutline();
 
   const { hydrate } = await import("@notes/runtime");
-  hydrate(compiled.js, "#noteContents").then(onHydrated);
+  hydrate(compiled.js, "#noteContents").then(() => onHydrated(runtimeContext));
 }
 
 async function runPrecompiled(
@@ -306,20 +311,20 @@ async function runPrecompiled(
 ) {
   normalizeLocation(searchKey, slug);
   runDynamicBreadcrumb(slug);
-  handleFrontMatter(frontMatter, slug);
+  const runtimeContext: NoteRuntimeContext = { frontMatter, slug };
+  handleFrontMatter(runtimeContext);
 
   // Initialize the page outline
   destroyPageOutline(); // Clean up any existing outline
   initPageOutline();
 
   const { hydrate } = await import("@notes/runtime");
-  hydrate(precompiledNoteBehavior, "#noteContents").then(onHydrated);
+  hydrate(precompiledNoteBehavior, "#noteContents").then(() =>
+    onHydrated(runtimeContext)
+  );
 }
 
-async function handleFrontMatter(
-  frontMatter: Record<string, any>,
-  slug: string
-) {
+async function handleFrontMatter({ frontMatter, slug }: NoteRuntimeContext) {
   const footerContents =
     document.querySelector<HTMLDivElement>("#footerContents");
   const footer = document.createElement("note-footer");

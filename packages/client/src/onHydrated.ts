@@ -1,7 +1,11 @@
-export async function onHydrated() {
+import { NoteRuntimeContext } from "./types";
+import { initUpdateHistory } from "./update-history";
+
+export async function onHydrated(runtimeContext: NoteRuntimeContext) {
   initLittlefoot();
   initImageZoom();
   initCodeBlockCopyButton();
+  initUpdateHistory(runtimeContext);
 }
 
 async function initLittlefoot() {
