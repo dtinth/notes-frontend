@@ -29,8 +29,8 @@ import { fetchPublicNoteContents, fetchTree } from "./io";
 import { onHydrated } from "./onHydrated";
 import { destroyPageOutline, initPageOutline } from "./page-outline";
 import { fetchPrivateNoteContents } from "./private-io";
-import { NoteRuntimeContext } from "./types";
 import "./style.css";
+import { NoteRuntimeContext } from "./types";
 
 function main() {
   injectHeaderElements();
@@ -184,6 +184,12 @@ async function runDynamic(searchKey: string, options: { isPrivate: boolean }) {
   Object.assign(window, { compileMarkdown });
   flashMessage("Compiling...");
   const result = await compileMarkdown(contents, slug);
+  if (result.errors?.length) {
+    console.error("Errors during compilation:");
+    for (const err of result.errors) {
+      console.error(err);
+    }
+  }
   flashMessage("Running...");
   await runCompiled(result.compiled, slug);
   flashMessage("");

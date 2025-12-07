@@ -1,10 +1,19 @@
 import { NoteRuntimeContext } from "../types";
 
 type UpdateEntry = { date: string; description?: string };
+let script: HTMLScriptElement | null = null;
 
 export function initUpdateHistory(runtimeContext: NoteRuntimeContext) {
+  if (!script) {
+    script = document.createElement("script");
+    script.src =
+      "https://cdn.jsdelivr.net/npm/@github/relative-time-element@4.5.1/dist/bundle.min.js";
+    script.async = true;
+    script.type = "module";
+    document.head.appendChild(script);
+  }
   const { frontMatter } = runtimeContext;
-  const created = frontMatter.created;
+  const created = formatDateISO(frontMatter.created);
   const updates: UpdateEntry[] = [
     ...(created
       ? [{ date: formatDateISO(created), description: "Initial publication" }]
@@ -16,7 +25,12 @@ export function initUpdateHistory(runtimeContext: NoteRuntimeContext) {
       })
     ),
   ].sort((a, b) => b.date.localeCompare(a.date));
-  const updated = updates.length > 1 ? updates[0].date : undefined;
+  const updated =
+    updates.length > 1
+      ? updates[0].date
+      : frontMatter.updated
+      ? formatDateISO(frontMatter.updated)
+      : undefined;
   if (created || updated) {
     const hasMultipleUpdates = updates.length > 1;
     const dateInfo = document.createElement(
@@ -26,11 +40,11 @@ export function initUpdateHistory(runtimeContext: NoteRuntimeContext) {
       "absolute top-[76px] text-[10px] text-[#8b8685] mt-2 border border-[#656463] px-0.75 uppercase " +
       (hasMultipleUpdates ? "cursor-pointer hover:bg-[#454443]" : "");
     if (updated) {
-      dateInfo.innerText = `Last updated ${formatDate(updated)}`;
+      dateInfo.innerHTML = `Last updated ${formatRelativeTimeHtml(updated)}`;
     } else {
-      dateInfo.innerText = `Published ${formatDate(created)}`;
+      dateInfo.innerHTML = `Published ${formatRelativeTimeHtml(created)}`;
     }
-    dateInfo.title = formatDateISO(updated || created);
+    dateInfo.title = updated || created;
     const mainContents =
       document.querySelector<HTMLDivElement>("#mainContents");
     if (mainContents) {
@@ -90,25 +104,12 @@ function createUpdateList(updates: UpdateEntry[]) {
   return div;
 }
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const now = new Date();
-  if (now < date) {
-    return formatDateISO(dateString);
-  }
-  if (now.getTime() - date.getTime() < 32 * 86400e3) {
-    const diff = Math.floor((now.getTime() - date.getTime()) / 86400e3);
-    return diff === 0 ? "today" : `${diff} ${diff === 1 ? "day" : "days"} ago`;
-  }
-  if (now.getFullYear() === date.getFullYear()) {
-    const monthsDiff =
-      now.getFullYear() * 12 +
-      now.getMonth() -
-      (date.getFullYear() * 12 + date.getMonth());
-    return monthsDiff === 1 ? "1 month ago" : `${monthsDiff} months ago`;
-  }
-  return formatDateISO(dateString);
-};
 const formatDateISO = (dateString: string) => {
   return new Date(dateString).toISOString().split("T")[0];
+};
+
+const formatRelativeTimeHtml = (dateIso: string) => {
+  return `<relative-time datetime="${dateIso}T00:00:00.000Z" precision="day" threshold="P100Y" no-title="">${formatDateISO(
+    dateIso
+  )}</relative-time>`;
 };
