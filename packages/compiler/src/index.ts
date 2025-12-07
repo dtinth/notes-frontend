@@ -23,6 +23,8 @@ const uno = createGenerator({
   },
 });
 
+const vueGlobalComponents = new Set(["d-split"]);
+
 export interface CompileMarkdownResult {
   compiled: CompiledNote;
   errors: string[];
@@ -91,7 +93,8 @@ export async function compileMarkdown(
       sfcOptions: {
         template: {
           compilerOptions: {
-            isCustomElement: (tag: string) => tag.includes("-"),
+            isCustomElement: (tag: string) =>
+              tag.includes("-") && !vueGlobalComponents.has(tag),
           },
         },
       },
