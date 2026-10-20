@@ -17,7 +17,7 @@ export default defineConfig({
     conditions: ["worker"],
     alias: [
       // The esm-bundler build keeps Vue's dev-mode checks and readable errors
-      // (NODE_ENV is pinned below) without the "development build" notice
+      // (NODE_ENV is pinned in `define` above) without the "development build" notice
       // that the esm-browser build prints on load.
       { find: /^vue$/, replacement: "vue/dist/vue.runtime.esm-bundler.js" },
       {
