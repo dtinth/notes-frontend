@@ -9,11 +9,17 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // https://vitejs.dev/config/
 export default defineConfig({
   publicDir: false,
+  define: {
+    "process.env.NODE_ENV": JSON.stringify("development"),
+  },
   plugins: [vue(), dts() as any],
   resolve: {
     conditions: ["worker"],
     alias: [
-      { find: /^vue$/, replacement: "vue/dist/vue.runtime.esm-browser.js" },
+      // The esm-bundler build keeps Vue's dev-mode checks and readable errors
+      // (NODE_ENV is pinned in `define` above) without the "development build" notice
+      // that the esm-browser build prints on load.
+      { find: /^vue$/, replacement: "vue/dist/vue.runtime.esm-bundler.js" },
       {
         find: /^vue\/compiler-sfc$/,
         replacement: "@vue/compiler-sfc/dist/compiler-sfc.esm-browser.js",
