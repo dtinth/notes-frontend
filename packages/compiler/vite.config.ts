@@ -13,7 +13,7 @@ export default defineConfig({
   resolve: {
     conditions: ["worker"],
     alias: [
-      { find: /^vue$/, replacement: "vue/dist/vue.runtime.esm-browser.js" },
+      { find: /^vue$/, replacement: "vue/dist/vue.runtime.esm-browser.prod.js" },
       {
         find: /^vue\/compiler-sfc$/,
         replacement: "@vue/compiler-sfc/dist/compiler-sfc.esm-browser.js",
