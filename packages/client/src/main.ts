@@ -38,6 +38,7 @@ function main() {
   checkScreenshotMode();
   enableQuickLink();
   addKeybinds();
+  enablePreviewHotReload();
   return runMain();
 }
 
@@ -128,6 +129,25 @@ async function getCompiler() {
   return import(
     /* @vite-ignore */ location.origin + "/compiler/index.js"
   ) as Promise<typeof import("../../compiler/src")>;
+}
+
+/**
+ * In the backoffice's preview, the page re-renders in place when its parent
+ * sends a newly compiled note. Only pages the backoffice generated carry
+ * `data-preview-origin` (the backoffice's origin), so the live site never
+ * listens, and the preview only listens to its parent at that origin.
+ */
+function enablePreviewHotReload() {
+  const origin = document.documentElement.dataset.previewOrigin;
+  if (!origin || window.parent === window) return;
+  window.addEventListener("message", async (e) => {
+    if (e.source !== window.parent || e.origin !== origin) return;
+    if (e.data?.type !== "notes-preview:update") return;
+    const slug = document.documentElement.dataset.slug || "";
+    await runCompiled(e.data.compiled, slug);
+    window.parent.postMessage({ type: "notes-preview:updated" }, origin);
+  });
+  window.parent.postMessage({ type: "notes-preview:ready" }, origin);
 }
 
 let onReload = () => {};
@@ -306,7 +326,9 @@ async function runCompiled(compiled: CompiledNote, slug: string) {
   initPageOutline();
 
   const { hydrate } = await import("@notes/runtime");
-  hydrate(compiled.js, "#noteContents").then(() => onHydrated(runtimeContext));
+  return hydrate(compiled.js, "#noteContents").then(() =>
+    onHydrated(runtimeContext)
+  );
 }
 
 async function runPrecompiled(
@@ -333,6 +355,8 @@ async function runPrecompiled(
 async function handleFrontMatter({ frontMatter, slug }: NoteRuntimeContext) {
   const footerContents =
     document.querySelector<HTMLDivElement>("#footerContents");
+  // A note rendered again (reloaded or hot-reloaded) replaces its footer.
+  footerContents?.querySelector("note-footer")?.remove();
   const footer = document.createElement("note-footer");
   footer.setAttribute("front-matter", JSON.stringify(frontMatter));
   footer.setAttribute("slug", slug);

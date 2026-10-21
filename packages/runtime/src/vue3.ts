@@ -19,10 +19,15 @@ export function executeCjs(
   return module.exports as { default: Vue.Component };
 }
 
+const mountedApps = new Map<string, Vue.App>();
+
 export async function hydrate(js: string | Function, target: string) {
   const Component = executeCjs(js, {}).default;
+  // Rendering into the same place again (e.g. a hot reload) replaces the app.
+  mountedApps.get(target)?.unmount();
   const app = Vue.createSSRApp(Component);
   registerComponents(app);
+  mountedApps.set(target, app);
   return app.mount(target).$nextTick();
 }
 
