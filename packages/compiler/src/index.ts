@@ -105,6 +105,10 @@ export async function compileMarkdown(
       compiled: { js: "", css: "", ssr: "" },
     } as File;
     const errors = await repl.compileFile(store, file);
+    // The browser build of compiler-sfc caches every parsed SFC in a Map
+    // that never evicts, so a long-running process compiling many notes
+    // grows without bound. Nothing here benefits from that cache.
+    compiler.parseCache.clear();
     log("vue compiler finished");
 
     if (errors.length) {
